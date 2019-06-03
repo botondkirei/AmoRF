@@ -1,0 +1,127 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      --><title>FreqSelClass</title><meta name="generator" content="MATLAB 7.10"><meta name="date" content="2011-04-12"><meta name="m-file" content="FreqSelClass"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>FreqSelectClass<a name="2"></a></h2><p>Parent class: <a href="AttributeClass.html">AttributeClass</a>. Frequency selectivity of RF/analog blocks.</p><h2>Properties<a name="3"></a></h2><div><ul><li><a href="#3">flt</a></li></ul></div><h2>Methods<a name="4"></a></h2><div><ul><li><a href="#4">process</a></li></ul></div><h2>flt<a name="6"></a></h2><p>This member is a concatenation of a filter nominator and denominator. Best recommended to be used with MATLAB filter design functions.</p><h2>process@FreqSelClass<a name="8"></a></h2><pre>OUTP=process(OBJECT,INP)</pre><p>The <tt>INP</tt> signal is recommended to be an object of <a href="SignalClass.html">SignalClass</a>. The frequency selectivity is implemented with:</p><p><img src="FreqSelClass_eq50543.png" alt="$$ y(k)=x(k) * h(k)$$"></p><p>The return value <tt>OUTP</tt> is also an object of <a href="SignalClass.html">SignalClass</a>. The method applies the frequency selectivity attribute.</p><h2>process<a name="9"></a></h2><p class="footer"><br>
+      Published with MATLAB&reg; 7.10<br></p></div><!--
+##### SOURCE BEGIN #####
+% FreqSelClass - frequency selectivity attribute of RF/analog blocks
+%
+% FreqSelClass properties:
+%   flt - filter coeffitients
+%
+% FreqSelClass methods:
+%   process - Process an input signal
+%
+% FreqSelClass parents:
+%   AttributeClass - functionalities and non-idealities
+%
+% See also: BaseClass, SignalClass, AttributeClass, BlockClass, TunerClass, 
+% GainClass, NoiseClass,  FreqConvClass, PhaseNoiseClass, IQImbalClass.
+classdef FreqSelClass < AttributeClass
+%% FreqSelectClass
+% Parent class: <AttributeClass.html AttributeClass>.
+% Frequency selectivity of RF/analog blocks.
+%% Properties
+% * <#3 flt>
+%% Methods
+% * <#4 process>
+properties
+        % Filter Coeffitients
+        Flt
+        %% flt
+        % This member is a concatenation of a filter nominator and
+        % denominator. Best recommended to be used with MATLAB filter
+        % design functions.
+    end
+    methods
+        %% process@FreqSelClass
+        %
+        %  OUTP=process(OBJECT,INP)
+        %
+        % The |INP| signal is recommended to be an object of
+        % <SignalClass.html SignalClass>. The frequency selectivity is
+        % implemented with:
+        % 
+        % $$ y(k)=x(k) * h(k)$$
+        %
+        % The return value |OUTP| is also
+        % an object of <SignalClass.html SignalClass>. The 
+        % method applies the frequency selectivity attribute.
+        function output=process(obj,input)
+        %% process
+        %
+        %	OUTP=process(OBJECT,INP) - The INP signal is recommended to
+        %	be an object of SignalClass. The return value OUTP is also an
+        %	object of SignalClass. The method applies the frequency
+        %	selectivity attribute. 
+        %
+        % See also: FreqSelClass/flt
+
+            output = SignalClass(0,input.Fs, input.Fc);
+            output.Samples = filter(obj.flt(1,:),obj.flt(2,:),input.Samples);
+        end
+    end
+end
+##### SOURCE END #####
+--></body></html>
