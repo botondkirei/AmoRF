@@ -1,4 +1,4 @@
-```marmaid
+```mermaid
 classDiagram
     Animal <|-- Duck
     Animal <|-- Fish
