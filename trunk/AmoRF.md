@@ -4,8 +4,8 @@ classDiagram
     Signal <|-- Tone
     Signal <|-- Band
     Signal : +String name
-    Animal: +isMammal()
-    Animal: +mate()
+    Signal: +dB()
+    Signal: +dBm(R)
     class Noise{
       +String name
     }
