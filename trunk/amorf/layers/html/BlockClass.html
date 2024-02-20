@@ -1,0 +1,653 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      --><title>BlockClass</title><meta name="generator" content="MATLAB 7.10"><meta name="date" content="2011-09-21"><meta name="m-file" content="BlockClass"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">BlockClass</a></li><li><a href="#3">Properties</a></li><li><a href="#4">Inherited Properties</a></li><li><a href="#5">Methods</a></li><li><a href="#7">Architecture</a></li><li><a href="#8">Signal</a></li><li><a href="#9">Zin</a></li><li><a href="#10">Zout</a></li><li><a href="#12">BlockClass@BlockClass</a></li><li><a href="#13">add@BlockClass</a></li><li><a href="#14">run@BlockClass</a></li><li><a href="#15">nf@BlockClass</a></li><li><a href="#16">compoint@BlockClass</a></li><li><a href="#17">gain@BlockClass</a></li><li><a href="#18">temp@BlockClass</a></li><li><a href="#19">getstructure@BlockClass</a></li></ul></div><pre class="codeinput"><span class="comment">% BlockClass - Aggregate class of attributes to create behavioral RF/analog</span>
+<span class="comment">% block models.</span>
+<span class="comment">%</span>
+<span class="comment">% BlockClass properties:</span>
+<span class="comment">%   Architecture - structure of RF/analog block</span>
+<span class="comment">%   Signal - output signal of RF/analog block</span>
+<span class="comment">%   Zin - input impedance</span>
+<span class="comment">%   Zout - output impdance</span>
+<span class="comment">%</span>
+<span class="comment">% BlockClass methods:</span>
+<span class="comment">%   BlockClass - object constructor</span>
+<span class="comment">%   add - add attributes to RF/analog block</span>
+<span class="comment">%   run - compute the response to the input signal</span>
+<span class="comment">%   nf - get noise figure of RF/analog block</span>
+<span class="comment">%   gain - get voltage gain (without load) of RF/analog block</span>
+<span class="comment">%   temp  - get equvalent temperature of RF/analog block</span>
+<span class="comment">%   compoint - get the 1dB compression point of RF/analog block</span>
+<span class="comment">%   getstructure - return an uitree structure of BlockClass/Architecture property</span>
+<span class="comment">%</span>
+<span class="comment">% BlockClass parents:</span>
+<span class="comment">%   AttributeClass - functionalities and non-idealities of an RF/analog block.</span>
+<span class="comment">%</span>
+<span class="comment">% See also: BaseClass, SignalClass, AttributeClass, TunerClass, GainClass,</span>
+<span class="comment">% NoiseClass, FreqSelClass, FreqConvClass, PhaseNoiseClass, IQImbalClass.</span>
+<span class="comment">%</span>
+<span class="keyword">classdef</span> BlockClass &lt; AttributeClass
+</pre><h2>BlockClass<a name="2"></a></h2><p>Parent Class: <a href="AttributeClass.html">AttributeClass</a> and <a href="matlab:doc('handle')">handle</a>.</p><p>Aggregate class of attributes to create behavioral RF/analog block models. It is derived form <a href="BaseClass.html">BaseClass</a> and inherits all common methods from it.</p><h2>Properties<a name="3"></a></h2><div><ul><li><a href="BlockClass.html#6">Architecture</a></li><li><a href="BlockClass.html#7">Signal</a></li><li><a href="BlockClass.html#8">Zin</a></li><li><a href="BlockClass.html#9">Zout</a></li></ul></div><h2>Inherited Properties<a name="4"></a></h2><p><a href="AttributeClass.html">AttributeClass</a></p><div><ul><li><a href="AttributeClass.html#9">AggObj</a> - Handle to the RF receiver object.</li></ul></div><p><a href="BaseClass.html">BaseClass</a></p><div><ul><li><a href="BaseClass.html#3">Name</a> - Name of the object.</li></ul></div><h2>Methods<a name="5"></a></h2><div><ul><li><a href="BlockClass.html#11">constructor</a></li><li><a href="BlockClass.html#12">add</a></li><li><a href="BlockClass.html#13">run</a></li><li><a href="BlockClass.html#14">gain</a></li><li><a href="BlockClass.html#15">nf</a></li><li><a href="BlockClass.html#16">compoint</a></li><li><a href="BlockClass.html#17">temp</a></li><li><a href="BlockClass.html#18">getstructure</a></li></ul></div><pre class="codeinput">    properties
+</pre><pre class="codeinput">        <span class="comment">% Structure to store the attributes of the RF/analog block.</span>
+        Architecture
+</pre><h2>Architecture<a name="7"></a></h2><p>Structure to store the attributes of the RF/analog block. To add an attribute to a RF/analog block use <a href="<BlockClass.html#11">add</a> method.</p><pre class="codeinput">        <span class="comment">% Output signal of RF/analog block.</span>
+        Signal
+</pre><h2>Signal<a name="8"></a></h2><p>Output signal of RF/analog block.</p><pre class="codeinput">        <span class="comment">% Input impedance of the RF component. Default value 50 Ohm.</span>
+        Zin=50
+</pre><h2>Zin<a name="9"></a></h2><p>Input impedance of the RF component. Default value 50 Ohm.</p><pre class="codeinput">        <span class="comment">% Output impedance of the RF component. Default value 50 Ohm.</span>
+        Zout=50
+</pre><h2>Zout<a name="10"></a></h2><p>Output impedance of the RF component. Default value 50 Ohm.</p><pre class="codeinput">    <span class="keyword">end</span>
+    methods
+</pre><h2>BlockClass@BlockClass<a name="12"></a></h2><pre>OBJ=BlockClass(NAME);</pre><p>Constructor methods of BlockClass. The method initialize the <a href="BlockClass.html#">Signal</a> property to <tt>SignalClass(0,0)</tt> and <a href="BlockClass.html#">Name</a> to <tt>NAME</tt>. The return value <tt>OBJ</tt> is the instantiation of BlockClass.</p><pre class="codeinput">        <span class="keyword">function</span> obj=BlockClass(name)
+        <span class="comment">% Constructor method</span>
+        <span class="comment">%</span>
+        <span class="comment">%	OBJ=BlockClass(NAME) - Constructor method of BlockClass. The</span>
+        <span class="comment">%	method initialize the BlockClass/Signal property to</span>
+        <span class="comment">%	SignalClass(0,0) and BlockClass/Name to NAME. The return value</span>
+        <span class="comment">%	OBJ is the instantiation of BlockClass.</span>
+            obj=obj@AttributeClass(name);
+            obj.Signal=SignalClass(0,0);
+        <span class="keyword">end</span>
+</pre><pre class="codeoutput">Input argument "name" is undefined.
+
+Error in ==&gt; BlockClass&gt;BlockClass.BlockClass at 97
+            obj=obj@AttributeClass(name);
+</pre><h2>add@BlockClass<a name="13"></a></h2><pre>add(OBJECT,ATTRIBUTE);</pre><p>The Method is used to add attributes to RF/analog block. An RF/analog block consists of several nonidealities. <tt>ATTRIBUTE</tt> can be either an instance of a AttributeClass or it's derived classes that complies with <a href="BlockClass.html#9">run</a> member.</p><pre class="codeinput">        <span class="keyword">function</span> obj=add(obj,attribute)
+        <span class="comment">% Add an attribute to the RF/analog block.</span>
+        <span class="comment">%</span>
+        <span class="comment">%  add(OBJECT,ATTRIBUTE);</span>
+        <span class="comment">%</span>
+        <span class="comment">% The Method is used to add attributes to RF/analog block. An</span>
+        <span class="comment">% RF/analog block consists of several nonidealities. ATTRIBUTE can be</span>
+        <span class="comment">% either an instance of a AttributeClass or it's derived classes</span>
+        <span class="comment">% that complies with BlockClas/run member.</span>
+            attribute.AggObj=obj;
+            obj.Architecture.(attribute.Name)=attribute;
+        <span class="keyword">end</span>
+</pre><h2>run@BlockClass<a name="14"></a></h2><pre>OBJ=run(OBJECT,INP)</pre><p>The method computes the response of the RF/analog block of the input signal <tt>INP</tt> (instance of <a href="SignalClass.html">SignalClass</a>). It evaluates the attributes included in <tt>OBJECT.Architecture</tt> property in the order they were added to <tt>OBJECT</tt>. <tt>OUTP</tt> is obtained by passing <tt>INP</tt> to the <tt>run</tt> methods of the attributes.</p><pre class="codeinput">        <span class="keyword">function</span>    outp=run(obj,inp)
+        <span class="comment">% Compute the response of the RF/analog block</span>
+        <span class="comment">%</span>
+        <span class="comment">%   OBJ=run(OBJECT,INP) The method computes the response of the</span>
+        <span class="comment">%   RF/analog block of the input signal INP (instance of SignalClass).</span>
+        <span class="comment">%   It evaluates the attributes included in OBJECT.Architecture</span>
+        <span class="comment">%   property in the order they were added to OBJECT. OUTP is</span>
+        <span class="comment">%   obtained by passing INP to the RUN methods of the</span>
+        <span class="comment">%   attributes.</span>
+        <span class="comment">%</span>
+        <span class="comment">% See also: BlockClass/getstructure, BlockClass/gain, BlockClass/nf,</span>
+        <span class="comment">% BlockClass/add, BlockClass/temp</span>
+            components = fieldnames(obj.Architecture);
+            [a,b] = size(components);
+            arch=obj.Architecture;
+            componentname=char(components(1));
+            outp=arch.(componentname).run(inp);
+            <span class="keyword">for</span> i=2:a
+                componentname=char(components(i));
+                outp=arch.(componentname).run(outp);
+            <span class="keyword">end</span>
+            obj.Signal=outp;
+        <span class="keyword">end</span>
+</pre><h2>nf@BlockClass<a name="15"></a></h2><pre>VALUE=nf(OBJECT)</pre><p>Returns the noise figure of the RF/analog block <tt>OBJECT</tt>. <tt>NF</tt> is stored in the <a href="NoiseClass.html">NoiseClass</a> attribute. This method interrogates all the included attributes for the noise figure <a href="NoiseClass.html#">NoiseClass/NF</a> and returns to <tt>VALUE</tt>. Good practice is to include NoiseClass attribute to every RF/analog block.</p><pre class="codeinput">        <span class="keyword">function</span> value=nf(obj)
+        <span class="comment">% Returns the Noise Figure of the RF.</span>
+        <span class="comment">%</span>
+        <span class="comment">%	VALUE=nf(OBJECT) Returns the noise figure of the RF/analog</span>
+        <span class="comment">%	block OBJECT. NF is stored in the NoiseClass/NF attribute.</span>
+        <span class="comment">%   This method interrogates all the included attributes for</span>
+        <span class="comment">%   the noise figure NoiseClass/NF and returns to VALUE.</span>
+        <span class="comment">%   Good practice is to include NoiseClass attribute to every</span>
+        <span class="comment">%   RF/analog block.</span>
+        <span class="comment">%</span>
+        <span class="comment">% See also: BlockClass/run, BlockClass/gain, BlockClass/getstructure,</span>
+        <span class="comment">% BlockClass/add, BlockClass/temp</span>
+        <span class="comment">%</span>
+            components = fieldnames(obj.Architecture);
+            [a,b] = size(components);
+            arch=obj.Architecture;
+            <span class="keyword">for</span> i=1:a
+                b=getfield(arch,char(components(i)));
+                <span class="keyword">try</span>
+                    value=b.nf;
+                <span class="keyword">catch</span> me
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+</pre><h2>compoint@BlockClass<a name="16"></a></h2><pre>VALUE=compoint(OBJECT)</pre><p>Returns the 1dB compression point of the RF/analog block <tt>OBJECT</tt>. The compression point is stored in the <a href="GainClass.html">GainClass</a> attribute. This method interrogates all the included attributes for the compression point &lt;GainClass.html GainClass/A1) and returns to <tt>VALUE</tt>. Good practice is to include GainClass attribute to every RF/analog block.</p><pre class="codeinput">        <span class="keyword">function</span> value=compoint(obj)
+        <span class="comment">% COMPOINT returns the 1dB compression point.</span>
+        <span class="comment">%</span>
+        <span class="comment">%   VALUE=compoint(OBJECT) Returns the 1dB compression point of the RF/analog</span>
+        <span class="comment">%   block OBJECT. The 1dB compression point is stored in the GainClass</span>
+        <span class="comment">%   attribute. This method interrogates all the included attributes</span>
+        <span class="comment">%   for the 1dB compression point GainClass/CP1 and returns to VALUE.</span>
+        <span class="comment">%   Good practice is to include GainClass attribute to every</span>
+        <span class="comment">%   RF/analog block.</span>
+        <span class="comment">%</span>
+        <span class="comment">% See also: BlockClass/run, BlockClass/getstructure, BlockClass/nf,</span>
+        <span class="comment">% BlockClass/add, BlockClass/temp</span>
+            components = fieldnames(obj.Architecture);
+            [a,b] = size(components);
+            arch=obj.Architecture;
+            <span class="keyword">for</span> i=1:a
+                b=getfield(arch,char(components(i)));
+                <span class="keyword">try</span>
+                    value=b.CP1;
+                <span class="keyword">catch</span> me
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+</pre><h2>gain@BlockClass<a name="17"></a></h2><pre>VALUE=gain(OBJECT)</pre><p>Returns the volatge gain (without load) of the RF/analog block <tt>OBJECT</tt>. The voltage gain is stored in the <a href="GainClass.html">GainClass</a> attribute. This method interrogates all the included attributes for the voltage gain &lt;GainClass.html GainClass/A1) and returns to <tt>VALUE</tt>. Good practice is to include GainClass attribute to every RF/analog block.</p><pre class="codeinput">        <span class="keyword">function</span> value=gain(obj)
+        <span class="comment">% GAIN returns the voltage gain (without load).</span>
+        <span class="comment">%</span>
+        <span class="comment">%   VALUE=gain(OBJECT) Returns the volatge gain of the RF/analog</span>
+        <span class="comment">%   block OBJECT. The voltage gain is stored in the GainClass</span>
+        <span class="comment">%   attribute. This method interrogates all the included attributes</span>
+        <span class="comment">%   for the voltage gain GainClass/A1 and returns to VALUE.</span>
+        <span class="comment">%   Good practice is to include GainClass attribute to every</span>
+        <span class="comment">%   RF/analog block.</span>
+        <span class="comment">%</span>
+        <span class="comment">% See also: BlockClass/run, BlockClass/getstructure, BlockClass/nf,</span>
+        <span class="comment">% BlockClass/add, BlockClass/temp, BlockClass/compoint</span>
+            components = fieldnames(obj.Architecture);
+            [a,b] = size(components);
+            arch=obj.Architecture;
+            <span class="keyword">for</span> i=1:a
+                b=getfield(arch,char(components(i)));
+                <span class="keyword">try</span>
+                    value=b.A1;
+                <span class="keyword">catch</span> me
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+</pre><h2>temp@BlockClass<a name="18"></a></h2><pre>VALUE=temp(OBJECT)</pre><p>Returns the voltage equivalent temperature of the RF/analog block <tt>OBJECT</tt>. The equivalent temperature is stored in the <a href="NoiseClass.html">NoiseClass</a> attribute. This method interrogates all the included attributes for the equivalent temperature NoiseClass/Temp and returns to <tt>VALUE</tt>. Good practice is to include NoiseClass attribute to every RF/analog block.</p><pre class="codeinput">        <span class="keyword">function</span> value=temp(obj)
+        <span class="comment">% Returns the volatge equivalent temperature of the RF/analog block</span>
+        <span class="comment">%</span>
+        <span class="comment">%	VALUE=temp(OBJECT) Returns the volatge equivalent temperature of</span>
+        <span class="comment">%	the RF/analog block OBJECT. The equivalent temperature is</span>
+        <span class="comment">%	stored in the NoiseClass&gt; attribute. This method interrogates all</span>
+        <span class="comment">%   the included attributes for the equivalent temperature</span>
+        <span class="comment">%   NoiseClass/Temp and returns to VALUE. Good practice is to</span>
+        <span class="comment">%   include NoiseClass attribute to every RF/analog block.</span>
+        <span class="comment">%</span>
+        <span class="comment">% See also: BlockClass/run, BlockClass/gain, BlockClass/nf,</span>
+        <span class="comment">% BlockClass/add, BlockClass/getstructure, BlockClass/compoint</span>
+        <span class="comment">%</span>
+            components = fieldnames(obj.Architecture);
+            [a,b] = size(components);
+            arch=obj.Architecture;
+            <span class="keyword">for</span> i=1:a
+                b=getfield(arch,char(components(i)));
+                <span class="keyword">try</span>
+                    value=b.Te;
+                <span class="keyword">catch</span> me
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+</pre><h2>getstructure@BlockClass<a name="19"></a></h2><pre>ROOT=getstructure(OBJECT)</pre><p>The method returns the object properties in a <a href="matlab:doc('uitree')">uitree</a> structure.</p><pre class="codeinput">        <span class="keyword">function</span> root=getstructure(obj)
+            <span class="comment">% Return the property names in a tree view structure</span>
+            <span class="comment">%</span>
+            <span class="comment">%    ROOT = getstructure(OBJECT) The method returns the</span>
+            <span class="comment">%    OBJECT's properties in a uitree structure.</span>
+            <span class="comment">%</span>
+            <span class="comment">% See also: BlockClass/run, BlockClass/gain, BlockClass/nf,</span>
+            <span class="comment">% BlockClass/add, BlockClass/temp, BlockClass/compoint</span>
+            <span class="comment">%</span>
+            root=uitreenode(<span class="string">'v0'</span>,<span class="string">'root'</span>,<span class="string">'Architecture'</span>,[],false);
+            arch=obj.Architecture;
+            branches = fieldnames(arch);
+            [a,b] = size(branches);
+            <span class="keyword">for</span> i=1:a
+                branchname=char(branches(i));
+                branch=uitreenode(<span class="string">'v0'</span>,<span class="string">'branch'</span>,branchname,[],false);
+                component=arch.(branchname);
+                leafs=fieldnames(component);
+                [c,d]=size(leafs);
+                <span class="keyword">for</span> i=1:c
+                    <span class="keyword">if</span> strcmp(char(leafs(i)),<span class="string">'Architecture'</span>)
+                        leaf=obj.Architecture.(branchname).getstructure;
+                    <span class="keyword">else</span>
+                        leaf=uitreenode(<span class="string">'v0'</span>,<span class="string">'branch'</span>,[char(leafs(i))],[],true);
+                    <span class="keyword">end</span>
+                    branch.add(leaf);
+                <span class="keyword">end</span>
+                root.add(branch);
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+</pre><pre class="codeinput">    <span class="keyword">end</span>
+</pre><pre class="codeinput"><span class="keyword">end</span>
+<span class="comment">% An RF component exhibits several non-idealities, but special attention</span>
+<span class="comment">% should be accorded to the thermal noise and the nonlinearity. Using these</span>
+<span class="comment">% two nonidealities the noise figure and the gain of the RF blocks are</span>
+<span class="comment">% modelled.</span>
+<span class="comment">%</span>
+<span class="comment">% The procedure of creating a RF component model comprises in a</span>
+<span class="comment">% few steps. First the objects of nonidealities are instatiated, then an</span>
+<span class="comment">% object of &lt;../amorf/generic/html/CompomentClass.html BlockClass&gt; is</span>
+<span class="comment">% created. Next use the add member of the</span>
+<span class="comment">% &lt;../amorf/generic/html/CompomentClass.html BlockClass&gt; object in</span>
+<span class="comment">% order to include the non-ideality objects into the component</span>
+<span class="comment">% model. The noise figure of the RF component is modelled using the thermal</span>
+<span class="comment">% noise object, so the noise figure property of the later object should be</span>
+<span class="comment">% written. The gain of the RF component is modeled by the nonlinearity</span>
+<span class="comment">% object. The idea is to set the linearity as high as possible in order to</span>
+<span class="comment">% not run the runed signal.</span>
+
+<span class="comment">%gain=NonLinearityClass; % create a non-linearity object</span>
+<span class="comment">%gain.a1=10; % set the component gain</span>
+<span class="comment">%gain.a3=0.001; % set the third order gain near to 0</span>
+<span class="comment">%amplif = BlockClass; % instatiate an object of BlockClass</span>
+<span class="comment">%amplif.add('Thermal', thermal); % add the thermal noise object</span>
+<span class="comment">%amplif.add('Gain',gain); % add the nonlinearity object</span>
+<span class="comment">%signal=amplif.run(signal); % run a signal</span>
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.10<br></p></div><!--
+##### SOURCE BEGIN #####
+% BlockClass - Aggregate class of attributes to create behavioral RF/analog
+% block models.
+%
+% BlockClass properties:
+%   Architecture - structure of RF/analog block
+%   Signal - output signal of RF/analog block
+%   Zin - input impedance
+%   Zout - output impdance
+%
+% BlockClass methods:
+%   BlockClass - object constructor
+%   add - add attributes to RF/analog block
+%   run - compute the response to the input signal
+%   nf - get noise figure of RF/analog block
+%   gain - get voltage gain (without load) of RF/analog block
+%   temp  - get equvalent temperature of RF/analog block
+%   compoint - get the 1dB compression point of RF/analog block
+%   getstructure - return an uitree structure of BlockClass/Architecture property
+%
+% BlockClass parents:
+%   AttributeClass - functionalities and non-idealities of an RF/analog block.
+%
+% See also: BaseClass, SignalClass, AttributeClass, TunerClass, GainClass,
+% NoiseClass, FreqSelClass, FreqConvClass, PhaseNoiseClass, IQImbalClass.
+% 
+classdef BlockClass < AttributeClass
+%% BlockClass
+% Parent Class: <AttributeClass.html AttributeClass> and
+% <matlab:doc('handle') handle>. 
+%
+% Aggregate class of attributes to create behavioral RF/analog block
+% models. It is derived form <BaseClass.html BaseClass> and inherits all
+% common methods from it.
+
+%% Properties
+% * <BlockClass.html#6 Architecture>
+% * <BlockClass.html#7 Signal>
+% * <BlockClass.html#8 Zin>
+% * <BlockClass.html#9 Zout>
+%% Inherited Properties 
+% <AttributeClass.html AttributeClass>
+%
+% * <AttributeClass.html#9 AggObj> - Handle to the RF receiver object.
+% 
+% <BaseClass.html BaseClass>
+%
+% * <BaseClass.html#3 Name> - Name of the object.
+% 
+%
+%% Methods
+% * <BlockClass.html#11 constructor>
+% * <BlockClass.html#12 add>
+% * <BlockClass.html#13 run>
+% * <BlockClass.html#14 gain>
+% * <BlockClass.html#15 nf>
+% * <BlockClass.html#16 compoint>
+% * <BlockClass.html#17 temp>
+% * <BlockClass.html#18 getstructure>
+    properties
+        % Structure to store the attributes of the RF/analog block.    
+        Architecture
+        %% Architecture
+        % Structure to store the attributes of the RF/analog block. To add an 
+        % attribute to a RF/analog block use <<BlockClass.html#11 add> method.
+        
+        % Output signal of RF/analog block. 
+        Signal
+        %% Signal
+        % Output signal of RF/analog block. 
+        
+        % Input impedance of the RF component. Default value 50 Ohm.
+        Zin=50
+        %% Zin
+        % Input impedance of the RF component. Default value 50 Ohm.
+        
+        % Output impedance of the RF component. Default value 50 Ohm.
+        Zout=50
+        %% Zout
+        % Output impedance of the RF component. Default value 50 Ohm.
+    end
+    methods
+        %% BlockClass@BlockClass
+        %
+        %  OBJ=BlockClass(NAME);
+        %
+        % Constructor methods of BlockClass. The method initialize the
+        % <BlockClass.html# Signal> property to |SignalClass(0,0)| and
+        % <BlockClass.html# Name> to |NAME|. The return value |OBJ| is the 
+        % instantiation of BlockClass.
+        function obj=BlockClass(name)
+        % Constructor method
+        %
+        %	OBJ=BlockClass(NAME) - Constructor method of BlockClass. The
+        %	method initialize the BlockClass/Signal property to
+        %	SignalClass(0,0) and BlockClass/Name to NAME. The return value
+        %	OBJ is the instantiation of BlockClass.
+            obj=obj@AttributeClass(name);
+            obj.Signal=SignalClass(0,0);
+        end
+        %% add@BlockClass
+        %
+        %  add(OBJECT,ATTRIBUTE);
+        %
+        % The Method is used to add attributes to RF/analog block. An
+        % RF/analog block consists of several nonidealities. |ATTRIBUTE| can be
+        % either an instance of a AttributeClass or it's derived classes
+        % that complies with <BlockClass.html#9 run> member. 
+        function obj=add(obj,attribute)
+        % Add an attribute to the RF/analog block.
+        %
+        %  add(OBJECT,ATTRIBUTE);
+        %
+        % The Method is used to add attributes to RF/analog block. An
+        % RF/analog block consists of several nonidealities. ATTRIBUTE can be
+        % either an instance of a AttributeClass or it's derived classes
+        % that complies with BlockClas/run member.
+            attribute.AggObj=obj;
+            obj.Architecture.(attribute.Name)=attribute;
+        end
+        %% run@BlockClass
+        %
+        %  OBJ=run(OBJECT,INP)
+        %
+        % The method computes the response of the RF/analog block of the
+        % input signal |INP| (instance of <SignalClass.html SignalClass>). It 
+        % evaluates the attributes included in |OBJECT.Architecture|
+        % property in the order they were added to |OBJECT|. |OUTP| is
+        % obtained by passing |INP| to the |run| methods of the   
+        % attributes.
+        function    outp=run(obj,inp)
+        % Compute the response of the RF/analog block
+        %
+        %   OBJ=run(OBJECT,INP) The method computes the response of the
+        %   RF/analog block of the input signal INP (instance of SignalClass).
+        %   It evaluates the attributes included in OBJECT.Architecture
+        %   property in the order they were added to OBJECT. OUTP is
+        %   obtained by passing INP to the RUN methods of the
+        %   attributes.
+        % 
+        % See also: BlockClass/getstructure, BlockClass/gain, BlockClass/nf,
+        % BlockClass/add, BlockClass/temp        
+            components = fieldnames(obj.Architecture);
+            [a,b] = size(components);
+            arch=obj.Architecture;
+            componentname=char(components(1));
+            outp=arch.(componentname).run(inp);
+            for i=2:a
+                componentname=char(components(i));
+                outp=arch.(componentname).run(outp);
+            end
+            obj.Signal=outp;
+        end
+        %% nf@BlockClass
+        %
+        %  VALUE=nf(OBJECT)
+        %
+        % Returns the noise figure of the RF/analog block |OBJECT|. |NF| is
+        % stored in the <NoiseClass.html NoiseClass> attribute. This method
+        % interrogates all the included attributes for the noise figure
+        % <NoiseClass.html# NoiseClass/NF> and returns to |VALUE|. Good
+        % practice is to include NoiseClass attribute to every RF/analog
+        % block.
+        function value=nf(obj)
+        % Returns the Noise Figure of the RF.
+        %
+        %	VALUE=nf(OBJECT) Returns the noise figure of the RF/analog
+        %	block OBJECT. NF is stored in the NoiseClass/NF attribute.
+        %   This method interrogates all the included attributes for
+        %   the noise figure NoiseClass/NF and returns to VALUE.
+        %   Good practice is to include NoiseClass attribute to every
+        %   RF/analog block. 
+        %
+        % See also: BlockClass/run, BlockClass/gain, BlockClass/getstructure,
+        % BlockClass/add, BlockClass/temp
+        %
+            components = fieldnames(obj.Architecture);
+            [a,b] = size(components);
+            arch=obj.Architecture;
+            for i=1:a
+                b=getfield(arch,char(components(i)));
+                try
+                    value=b.nf;
+                catch me
+                end
+            end
+        end
+        %% compoint@BlockClass
+        %
+        %  VALUE=compoint(OBJECT)
+        %
+        % Returns the 1dB compression point of the RF/analog block |OBJECT|. The
+        % compression point is stored in the <GainClass.html GainClass>
+        % attribute. This method interrogates all the included attributes
+        % for the compression point <GainClass.html GainClass/A1) and returns to |VALUE|. Good
+        % practice is to include GainClass attribute to every RF/analog 
+        % block.
+        function value=compoint(obj)
+        % COMPOINT returns the 1dB compression point.
+        %
+        %   VALUE=compoint(OBJECT) Returns the 1dB compression point of the RF/analog
+        %   block OBJECT. The 1dB compression point is stored in the GainClass
+        %   attribute. This method interrogates all the included attributes
+        %   for the 1dB compression point GainClass/CP1 and returns to VALUE.
+        %   Good practice is to include GainClass attribute to every
+        %   RF/analog block. 
+        % 
+        % See also: BlockClass/run, BlockClass/getstructure, BlockClass/nf,
+        % BlockClass/add, BlockClass/temp
+            components = fieldnames(obj.Architecture);
+            [a,b] = size(components);
+            arch=obj.Architecture;
+            for i=1:a
+                b=getfield(arch,char(components(i)));
+                try
+                    value=b.CP1;
+                catch me
+                end
+            end
+        end
+        %% gain@BlockClass
+        %
+        %  VALUE=gain(OBJECT)
+        %
+        % Returns the volatge gain (without load) of the RF/analog block |OBJECT|. The
+        % voltage gain is stored in the <GainClass.html GainClass>
+        % attribute. This method interrogates all the included attributes
+        % for the voltage gain <GainClass.html GainClass/A1) and returns to |VALUE|. Good
+        % practice is to include GainClass attribute to every RF/analog 
+        % block.
+        function value=gain(obj)
+        % GAIN returns the voltage gain (without load).
+        %
+        %   VALUE=gain(OBJECT) Returns the volatge gain of the RF/analog
+        %   block OBJECT. The voltage gain is stored in the GainClass
+        %   attribute. This method interrogates all the included attributes
+        %   for the voltage gain GainClass/A1 and returns to VALUE.
+        %   Good practice is to include GainClass attribute to every
+        %   RF/analog block. 
+        % 
+        % See also: BlockClass/run, BlockClass/getstructure, BlockClass/nf,
+        % BlockClass/add, BlockClass/temp, BlockClass/compoint
+            components = fieldnames(obj.Architecture);
+            [a,b] = size(components);
+            arch=obj.Architecture;
+            for i=1:a
+                b=getfield(arch,char(components(i)));
+                try
+                    value=b.A1;
+                catch me
+                end
+            end
+        end
+        %% temp@BlockClass
+        %
+        %  VALUE=temp(OBJECT)
+        %
+        % Returns the voltage equivalent temperature of the RF/analog block |OBJECT|. The
+        % equivalent temperature is stored in the <NoiseClass.html NoiseClass>
+        % attribute. This method interrogates all the included attributes
+        % for the equivalent temperature NoiseClass/Temp and returns to |VALUE|. Good
+        % practice is to include NoiseClass attribute to every RF/analog 
+        % block.
+        function value=temp(obj)
+        % Returns the volatge equivalent temperature of the RF/analog block
+        %
+        %	VALUE=temp(OBJECT) Returns the volatge equivalent temperature of
+        %	the RF/analog block OBJECT. The equivalent temperature is
+        %	stored in the NoiseClass> attribute. This method interrogates all
+        %   the included attributes for the equivalent temperature
+        %   NoiseClass/Temp and returns to VALUE. Good practice is to
+        %   include NoiseClass attribute to every RF/analog block.
+        %  
+        % See also: BlockClass/run, BlockClass/gain, BlockClass/nf,
+        % BlockClass/add, BlockClass/getstructure, BlockClass/compoint
+        % 
+            components = fieldnames(obj.Architecture);
+            [a,b] = size(components);
+            arch=obj.Architecture;
+            for i=1:a
+                b=getfield(arch,char(components(i)));
+                try
+                    value=b.Te;
+                catch me
+                end
+            end
+        end
+        %% getstructure@BlockClass
+        %
+        %  ROOT=getstructure(OBJECT)
+        %
+        % The method returns the object properties in a
+        % <matlab:doc('uitree') uitree> structure. 
+        function root=getstructure(obj)
+            % Return the property names in a tree view structure
+            %
+            %    ROOT = getstructure(OBJECT) The method returns the
+            %    OBJECT's properties in a uitree structure.
+            %
+            % See also: BlockClass/run, BlockClass/gain, BlockClass/nf,
+            % BlockClass/add, BlockClass/temp, BlockClass/compoint
+            %
+            root=uitreenode('v0','root','Architecture',[],false);
+            arch=obj.Architecture;
+            branches = fieldnames(arch);
+            [a,b] = size(branches);
+            for i=1:a
+                branchname=char(branches(i));
+                branch=uitreenode('v0','branch',branchname,[],false);
+                component=arch.(branchname);
+                leafs=fieldnames(component);
+                [c,d]=size(leafs);
+                for i=1:c
+                    if strcmp(char(leafs(i)),'Architecture')
+                        leaf=obj.Architecture.(branchname).getstructure;
+                    else
+                        leaf=uitreenode('v0','branch',[char(leafs(i))],[],true);
+                    end
+                    branch.add(leaf);
+                end
+                root.add(branch);
+            end
+        end
+    end
+end
+% An RF component exhibits several non-idealities, but special attention
+% should be accorded to the thermal noise and the nonlinearity. Using these
+% two nonidealities the noise figure and the gain of the RF blocks are
+% modelled. 
+%
+% The procedure of creating a RF component model comprises in a
+% few steps. First the objects of nonidealities are instatiated, then an
+% object of <../amorf/generic/html/CompomentClass.html BlockClass> is
+% created. Next use the add member of the
+% <../amorf/generic/html/CompomentClass.html BlockClass> object in
+% order to include the non-ideality objects into the component
+% model. The noise figure of the RF component is modelled using the thermal
+% noise object, so the noise figure property of the later object should be
+% written. The gain of the RF component is modeled by the nonlinearity
+% object. The idea is to set the linearity as high as possible in order to
+% not run the runed signal.
+
+%gain=NonLinearityClass; % create a non-linearity object
+%gain.a1=10; % set the component gain
+%gain.a3=0.001; % set the third order gain near to 0
+%amplif = BlockClass; % instatiate an object of BlockClass
+%amplif.add('Thermal', thermal); % add the thermal noise object
+%amplif.add('Gain',gain); % add the nonlinearity object
+%signal=amplif.run(signal); % run a signal
+##### SOURCE END #####
+--></body></html>

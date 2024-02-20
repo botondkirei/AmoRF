@@ -1,0 +1,215 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      --><title>AttributeClass</title><meta name="generator" content="MATLAB 7.10"><meta name="date" content="2011-04-20"><meta name="m-file" content="AttributeClass"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>AttributeClass<a name="2"></a></h2><p>Parent classes: <a href="BaseClass.html">BaseClass</a> and <a href="matlab:doc('handle')">handle</a>. A template class for RF/analog block attributes. The common methods of <a href="BaseClass.html">BaseClass</a> are inherited. The AttributeClass encapsulates the <a href="AttributeClass.html#6">effect</a> method, that must be overwritten by the individual attrribute implementation.</p><h2>Properties<a name="3"></a></h2><div><ul><li><a href="AttributeClass.html#6">SeqLen</a></li></ul></div><h2>Inherited Properties<a name="4"></a></h2><p><a href="BaseClass.html">BaseClass</a></p><div><ul><li><b>Name</b> - Name of the object.</li></ul></div><h2>Methods<a name="5"></a></h2><div><ul><li><a href="AttributeClass.html#7">effect</a></li><li><a href="AttributeClass.html#8">run</a></li></ul></div><h2>Examples<a name="6"></a></h2><div><ul><li><a href="AttributeClass.html#8">Creating a user defined class for DC offset</a></li></ul></div><h2>SeqLen<a name="8"></a></h2><p>The sequence length used by the  <a href="AttributeClass.html#8">run</a> method. DEfault value is 500000.</p><h2>effect@AttributeClass<a name="10"></a></h2><pre>OUTP=effect(OBJECT,INP)</pre><p>This method is intended to be a templete for the functional implementation of any attribute. <tt>OBJECT</tt> effectes the <tt>INP</tt> signal (that is supposed to be an object of SignalClass) and return the value in <tt>OUTP</tt>.</p><h2>run@AttributeClass<a name="11"></a></h2><pre>OUTP=run(OBJECT, INP)</pre><p>Breaks the <tt>INP</tt> signal the SeqSize length chunks and invites the <a href="AttributeClass.html#7">effect</a> method of OBJECT on each chunk. After processing the return values is assambled in <tt>OUTP</tt>. This feature may be used when a long length signal is processed.</p><h2>Creating a user defined class for DC offset<a name="12"></a></h2><p><b>Step 1.</b> The abstraction of DC offset</p><p>The property of DC offset is a constant voltage that is added to the received baseband signal. Thus the class will encapsulate a property called <tt>offset</tt> and the functionality that should be implemented is:</p><p><img src="AttributeClass_eq04712.png" alt="$$y(n)=x(n) + offset$$"></p><p>where x(n) is the received baseband, and y(n) is the signal with DC offset.</p><p><b>Step 2.</b> Define DCOffsetClass</p><pre>classdef DCOffsetClass &lt; AttributeClass
+  properties
+    offset
+  end
+  methods
+    function DCOffsetClass(obj,value)
+      obj.offset=value;
+    end
+    function outp=effect(obj,inp)
+      outp=inp+obj.offset;
+    end
+  end
+end</pre><p>DCOffsetClass is fully compatible with the amoRF toolbox.</p><p class="footer"><br>
+      Published with MATLAB&reg; 7.10<br></p></div><!--
+##### SOURCE BEGIN #####
+% AttributeClass - The template class for functionalities and
+% non-idealities in RF/analog blocks.
+%   
+% AttributeClass properties:
+%   SeqSize - Sequence Size. Deafaul is 100000.
+%
+% AttributeClass methods:
+%   effect - introduce the effect of the attribute
+%   run - Break the input signal to SeqSize length sequencies and call
+%   effect member for each chunk
+%
+% AttributeClass parents:
+%   BaseClass - Superclass of amoRF toolbox.
+%
+% See also: BaseClass, SignalClass, BlockClass, TunerClass, GainClass,
+% NoiseClass, FreqSelClass, FreqConvClass, PhaseNoiseClass, IQImbalClass.
+% 
+
+classdef AttributeClass < BaseClass & handle
+%% AttributeClass
+% Parent classes: <BaseClass.html BaseClass> and <matlab:doc('handle') handle>.
+% A template class for RF/analog block attributes. The common methods of
+% <BaseClass.html BaseClass> are inherited. The AttributeClass encapsulates
+% the <AttributeClass.html#6 effect> method, that must be overwritten by
+% the individual attrribute implementation.
+% 
+%% Properties
+%
+% * <AttributeClass.html#6 SeqLen>
+%
+%% Inherited Properties 
+% <BaseClass.html BaseClass>
+%
+% * *Name* - Name of the object.
+%
+%% Methods
+% * <AttributeClass.html#7 effect>
+% * <AttributeClass.html#8 run>
+%% Examples
+% * <AttributeClass.html#8 Creating a user defined class for DC offset>
+    properties (Access=private)
+        % Sequence length. Default value is 500000.
+        SeqLen=500000
+        %% SeqLen
+        % The sequence length used by the  <AttributeClass.html#8 run>
+        % method. DEfault value is 500000.
+    end
+    methods
+        %% effect@AttributeClass
+        %
+        %  OUTP=effect(OBJECT,INP)
+        %
+        % This method is intended to be a templete for the functional
+        % implementation of any attribute. |OBJECT| effectes the |INP|
+        % signal (that is supposed to be an object of SignalClass) and
+        % return the value in |OUTP|. 
+        function outp=effect(obj,inp)
+        % Attribute effect on the signal.
+        %
+        %  OUTP=effect(OBJECT,INP,PARENT)
+        %
+        % This method is intended to be a templete for the functional
+        % implementation of any attribute. OBJECT effectes the INP
+        % signal (that is supposed to be an object of SignalClass) and
+        % return the value in OUTP.
+            outp=SignalClass(inp);
+        end
+        %% run@AttributeClass
+        %
+        %  OUTP=run(OBJECT, INP)
+        %
+        % Breaks the |INP| signal the SeqSize length chunks and invites the
+        % <AttributeClass.html#7 effect> method of OBJECT on each chunk.
+        % After processing the return values is assambled in |OUTP|. This
+        % feature may be used when a long length signal is processed.
+        function outp=run(obj, inp)
+        % Run - Break the input signal to SeqSize length sequencies and call
+        %   effect member for each chunk.
+        %
+        % OUTP=run(OBJECT, INP)
+        %
+        % Breaks the |INP| signal the SeqSize length chunks and invites the
+        % AttributeClass/effect method of OBJECT on each chunk.
+        % After processing the return values is assambled in OUTP. This
+        % feature may be used when a long length signal is processed. 
+            L=inp.length;
+            N=floor(L/obj.SeqLen);
+            copy=SignalClass(0,0);
+            copy.Fs=inp.Fs;
+            copy.Fc=inp.Fc;
+            copy.Samples=[];
+            outp=copy;
+            for i = 1:N
+                copy.Samples=inp.Samples(1:N);
+                inp.Samples(1:N)=[];
+                copy=obj.effect(copy);
+                outp.Samples=[outp.Samples copy.Samples];
+            end
+            copy.Samples=inp.Samples;
+            copy=obj.effect(copy);
+            outp.Samples=[outp.Samples copy.Samples];    
+        end
+        %% Creating a user defined class for DC offset 
+        %
+        % *Step 1.* The abstraction of DC offset
+        %
+        % The property of DC offset is a constant voltage that is added to the 
+        % received baseband signal. Thus the class will encapsulate a property
+        % called |offset| and the functionality that should be implemented is:
+        % 
+        % $$y(n)=x(n) + offset$$
+        % 
+        % where x(n) is the received baseband, and y(n) is the signal with 
+        % DC offset.
+        %
+        % *Step 2.* Define DCOffsetClass
+        %
+        %  classdef DCOffsetClass < AttributeClass
+        %    properties
+        %      offset
+        %    end
+        %    methods
+        %      function DCOffsetClass(obj,value)
+        %        obj.offset=value;
+        %      end
+        %      function outp=effect(obj,inp)
+        %        outp=inp+obj.offset;
+        %      end
+        %    end
+        %  end
+        %
+        % DCOffsetClass is fully compatible with the amoRF toolbox.
+    end
+end
+##### SOURCE END #####
+--></body></html>

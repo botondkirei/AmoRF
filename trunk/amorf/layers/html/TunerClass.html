@@ -1,0 +1,730 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      --><title>TunerClass</title><meta name="generator" content="MATLAB 7.10"><meta name="date" content="2011-10-14"><meta name="m-file" content="TunerClass"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">TunerClass</a></li><li><a href="#3">Inherited Properties</a></li><li><a href="#4">Methods</a></li><li><a href="#5">Inherited methods</a></li><li><a href="#6">TunerClass@TunerClass</a></li><li><a href="#7">run@TunerClass</a></li><li><a href="#8">gain@TunerClass</a></li><li><a href="#9">IMGs@TunerClass</a></li><li><a href="#10">temp@TunerClass</a></li><li><a href="#11">cp1@TunerClass</a></li><li><a href="#12">nf@TunerClass</a></li><li><a href="#14">cnr</a></li></ul></div><pre class="codeinput"><span class="comment">% TunerClass</span>
+<span class="comment">% Aggregate class of RF/analog blocks to create RF tuner</span>
+<span class="comment">% composite models.</span>
+<span class="comment">%</span>
+<span class="comment">% TunerClass methods:</span>
+<span class="comment">%   run - compute the response the an input signal</span>
+<span class="comment">%</span>
+<span class="comment">% TunerClass parents:</span>
+<span class="comment">%   BlockClass - RF/analog block aggregate class.</span>
+<span class="comment">%</span>
+<span class="comment">% TunerClass properties (inherited from BlockClass)</span>
+<span class="comment">%   Architecture - RF tuner architecture.</span>
+<span class="comment">%   Signal -output signal of the RF tuner.</span>
+<span class="comment">%   Zin - antenna impedance, default value 50 Ohm.</span>
+<span class="comment">%   Zout - receiver output impedance, default value INF.</span>
+<span class="comment">%</span>
+<span class="comment">% See also: BaseClass, SignalClass, AttributeClass, BlockClass, GainClass,</span>
+<span class="comment">% NoiseClass, FreqSelClass, FreqConvClass, PhaseNoiseClass, IQImbalClass.</span>
+<span class="comment">%</span>
+<span class="keyword">classdef</span> TunerClass &lt; BlockClass
+</pre><h2>TunerClass<a name="2"></a></h2><p>Parent class: <a href="BlockClass.html">BlockClass</a>. Aggregate class of RF/analog block to create behavioral RF tuner models.</p><h2>Inherited Properties<a name="3"></a></h2><p><a href="BlockClass.html">BlockClass</a></p><div><ul><li><b>Architecture</b> - RF tuner architecture.</li><li><b>Signal</b> -output signal of the RF tuner.</li><li><b>Zin</b> - antenna impedance, default value 50 Ohm.</li><li><b>Zout</b> - receiver output impedance, default value INF.</li><li><b>Name</b> - name of the object.</li></ul></div><h2>Methods<a name="4"></a></h2><div><ul><li><a href="TunerClass.html#11">constructor</a></li><li><a href="TunerClass.html#12">run</a></li><li><a href="TunerClass.html#13">temp</a></li><li><a href="TunerClass.html#14">nf</a></li></ul></div><h2>Inherited methods<a name="5"></a></h2><p><a href="BlockClass.html">BlockClass</a> * <a href="BlockClass.html#15">add</a> * <a href="BlockClass.html#16">getstructure</a> * <a href="BlockClass.html#17">gain</a></p><pre class="codeinput">methods
+</pre><h2>TunerClass@TunerClass<a name="6"></a></h2><pre>OBJ=TunerClass(NAME);</pre><p>Returns an object of TunerClass. NAME is written to TunerClass/Name property. Zin, Zout and Signal are initialized to 50 Ohm, INF, and SignalClass(0,0).</p><pre class="codeinput">        <span class="keyword">function</span> obj=TunerClass(name)
+        <span class="comment">% TunerClass - Object constructor</span>
+        <span class="comment">%</span>
+        <span class="comment">%   OBJ=TunerClass(NAME) - NAME is written to TunerClass/Name</span>
+        <span class="comment">%   property. Zin, Zout and TunerClass/Signal are initialized</span>
+        <span class="comment">%   to 50 Ohm, INF, and SignalClass(0,0).</span>
+        <span class="comment">%</span>
+        <span class="comment">% See also: TunerClass/run, TunerClass/nf</span>
+        <span class="comment">%</span>
+
+            obj=obj@BlockClass(name);
+            obj.Zin=50;
+            obj.Zout=50;
+            obj.Signal=SignalClass(0,1);
+
+        <span class="keyword">end</span>
+</pre><pre class="codeoutput">Input argument "name" is undefined.
+
+Error in ==&gt; TunerClass&gt;TunerClass.TunerClass at 65
+            obj=obj@BlockClass(name);
+</pre><h2>run@TunerClass<a name="7"></a></h2><pre>OBJ=run(OBJECT,INP)</pre><p>Computes the output of the RF tuner to signal <tt>INP</tt>. The funtion returns an object of TunerClass with Signal property updated with the output of the RF tuner.</p><pre>[OBJ,OUTP]=run(OBJECT,INP)</pre><p>Computes the output of the RF tuner to signal <tt>INP</tt>. The method returns an object of TunerClass with the updated Signal property and the output signal <tt>OUTP</tt> of the RF tuner.</p><pre class="codeinput">         <span class="keyword">function</span> outp=run(obj,inp)
+         <span class="comment">%PROCESS Computes the response of the component to a signal</span>
+         <span class="comment">%</span>
+         <span class="comment">%   OBJ=run(OBJECT,INP) Computes the output of the receiver to</span>
+         <span class="comment">%   signal INP. The funtion returns an object of TunerClass with</span>
+         <span class="comment">%   Signal property updated with the output of the RF tuner.</span>
+         <span class="comment">%</span>
+         <span class="comment">%   [obj,outp]=obj.run(inp) Computes the output of the RF tuner</span>
+         <span class="comment">%   to signal INP. The method returns an object of TunerClass with</span>
+         <span class="comment">%   the updated Signal property and the output signal OUTP of the</span>
+         <span class="comment">%   RF tuner.</span>
+         <span class="comment">%</span>
+         <span class="comment">% See also: TunerClass/TunerClass, TunerClass/nf</span>
+         <span class="comment">%</span>
+             blocks = fieldnames(obj.Architecture);
+             [a,b] = size(blocks);
+             componentname=char(blocks(1));
+             outp=obj.Architecture.(componentname).run(inp);
+             <span class="comment">%obj.Architecture.(componentname)=obj.Architecture.(componentname).run(inp);</span>
+             <span class="comment">%outp=obj.Architecture.(componentname).Signal;</span>
+             <span class="keyword">for</span> i=2:a
+                 componentname=char(blocks(i));
+                 outp=obj.Architecture.(componentname).run(outp);
+                 <span class="comment">%obj.Architecture.(componentname)=obj.Architecture.(componentname).run(outp);</span>
+                 <span class="comment">%outp=obj.Architecture.(componentname).Signal;</span>
+             <span class="keyword">end</span>
+             obj.Signal=SignalClass(outp);
+         <span class="keyword">end</span>
+</pre><h2>gain@TunerClass<a name="8"></a></h2><pre>Gtotal=gain(OBJECT)</pre><p>Returns the equivalent gain of the RF tuner <tt>OBJECT</tt>. The equivalent gain is computed with:</p><p><img src="TunerClass_eq11295.png" alt="$$ G_{total}=\prod\limits_i{G_i} $$"></p><p>
+where <i>G<sub>i</sub></i> are the
+equivalent gains of the ith RF/analog block.
+</p><pre class="codeinput">        <span class="keyword">function</span> Gtotal=gain(obj)
+        <span class="comment">% GAIN Returns the equivalent gain of the RF tuner.</span>
+        <span class="comment">%</span>
+        <span class="comment">% Gtotal=gain(OBJECT) - Returns the equivalent gain of the RF</span>
+        <span class="comment">% tuner OBJECT.</span>
+
+
+            <span class="comment">%get the voltage gain of the blocks respectivelly the input</span>
+            <span class="comment">%and output impedences, to compute the available gain</span>
+            G=[];
+            ZIN=[];
+            ZOUT=[];
+            blocks = fieldnames(obj.Architecture);
+            [a,b] = size(blocks);
+            <span class="keyword">for</span> i=1:a
+                componentname=char(blocks(i));
+                G=[G obj.Architecture.(componentname).gain];
+                ZIN=[ZIN obj.Architecture.(componentname).Zin];
+                ZOUT=[ZOUT obj.Architecture.(componentname).Zout];
+            <span class="keyword">end</span>
+            <span class="comment">%voltage gain = Zload/(Zout + Zin)*voltage gain without load</span>
+            <span class="comment">%set the last load to be infinite</span>
+            ZIN=[ZIN ZIN(end)];
+            voltage_gain=ZIN(2:end)./(ZOUT+ZIN(2:end)).*G;
+            power_gain=(ZIN(1:end-1)./ZIN(2:end)).*(G.^2);
+
+            Gtotal=G(1);
+            <span class="keyword">for</span> i=2:length(G)
+                Gtotal=Gtotal*G(i);
+            <span class="keyword">end</span>
+
+        <span class="keyword">end</span>
+</pre><h2>IMGs@TunerClass<a name="9"></a></h2><pre>EVM_IMG=IMGsOBJECT)</pre><p>Returns the equivalent image suppression of the RF tuner <tt>OBJECT</tt>. The equivalent image suppression is computed with:</p><p><img src="TunerClass_eq18415.png" alt="$$ EVM_{IMG}=\sqrt {{10}^{\frac{IMGs}{10}}} $$"></p><p>
+where <i>IMG</i> is the
+equivalent image supression of the mixer RF/analog block.
+</p><pre class="codeinput">        <span class="keyword">function</span> IMGs=EVM_IMG(obj)
+        <span class="comment">% GAIN Returns the equivalent gain of the RF tuner.</span>
+        <span class="comment">%</span>
+        <span class="comment">% Gtotal=gain(OBJECT) - Returns the equivalent gain of the RF</span>
+        <span class="comment">% tuner OBJECT.</span>
+
+
+            <span class="comment">%get the voltage gain of the blocks respectivelly the input</span>
+            <span class="comment">%and output impedences, to compute the available gain</span>
+            G=[];
+            ZIN=[];
+            ZOUT=[];
+            blocks = fieldnames(obj.Architecture);
+            [a,b] = size(blocks);
+            <span class="keyword">for</span> i=1:a
+                componentname=char(blocks(i));
+                G=[G obj.Architecture.(componentname).gain];
+                ZIN=[ZIN obj.Architecture.(componentname).Zin];
+                ZOUT=[ZOUT obj.Architecture.(componentname).Zout];
+            <span class="keyword">end</span>
+            <span class="comment">%voltage gain = Zload/(Zout + Zin)*voltage gain without load</span>
+            <span class="comment">%set the last load to be infinite</span>
+            ZIN=[ZIN ZIN(end)];
+            voltage_gain=ZIN(2:end)./(ZOUT+ZIN(2:end)).*G;
+            power_gain=(ZIN(1:end-1)./ZIN(2:end)).*(G.^2);
+
+            Gtotal=G(1);
+            <span class="keyword">for</span> i=2:length(G)
+                Gtotal=Gtotal*G(i);
+            <span class="keyword">end</span>
+
+        <span class="keyword">end</span>
+</pre><h2>temp@TunerClass<a name="10"></a></h2><pre>Ttotal=temp(OBJECT)</pre><p>Returns the equivalent temperature of the RF tuner <tt>OBJECT</tt>. The equivalent temperature is computed with:</p><p><img src="TunerClass_eq19159.png" alt="$$ T_{total}=\sum\limits_i \frac{T_i}{\prod\limits_{i-1}{G_i}} , {G_0}=1  $$"></p><p>
+where <i>T<sub>i</sub></i> and <i>G<sub>i</sub></i> are the
+equivalent temperatures and power gains of the ith RF/analog block.
+</p><pre class="codeinput">        <span class="keyword">function</span> Ttotal=temp(obj)
+        <span class="comment">% TEMP Returns the equivalent temperature of the RF tuner.</span>
+        <span class="comment">%</span>
+        <span class="comment">% Ttotal=temp(OBJECT) - Returns the equivalent temperature of the RF</span>
+        <span class="comment">% tuner OBJECT.</span>
+
+
+            <span class="comment">%get the voltage gain of the blocks respectivelly the input</span>
+            <span class="comment">%and output impedences, to compute the available gain</span>
+            G=[];
+            ZIN=[];
+            ZOUT=[];
+            T=[];
+            blocks = fieldnames(obj.Architecture);
+            [a,b] = size(blocks);
+            <span class="keyword">for</span> i=1:a
+                componentname=char(blocks(i));
+                G=[G obj.Architecture.(componentname).gain];
+                ZIN=[ZIN obj.Architecture.(componentname).Zin];
+                ZOUT=[ZOUT obj.Architecture.(componentname).Zout];
+                T=[T obj.Architecture.(componentname).temp];
+            <span class="keyword">end</span>
+            <span class="comment">%voltage gain = Zload/(Zout + Zin)*voltage gain without load</span>
+            <span class="comment">%set the last load to be infinite</span>
+            ZIN=[ZIN ZIN(end)];
+            voltage_gain=ZIN(2:end)./(ZOUT+ZIN(2:end)).*G;
+            power_gain=(ZIN(1:end-1)./ZIN(2:end)).*(G.^2);
+
+            Ttotal=T(1);
+            Gtotal=power_gain(1);
+            <span class="keyword">for</span> i=2:length(T)
+                Ttotal=Ttotal+T(i)/Gtotal;
+                Gtotal=Gtotal*power_gain(i);
+            <span class="keyword">end</span>
+
+        <span class="keyword">end</span>
+</pre><h2>cp1@TunerClass<a name="11"></a></h2><pre>cp1total=CP1(OBJECT)</pre><p>Returns the equivalent 1dB compression point of the RF tuner <tt>OBJECT</tt>. The equivalent 1dB compression point is computed with:</p><p><img src="TunerClass_eq56215.png" alt="$$ \frac{1}{CP1_{total}^2}=\sum\limits_i \frac{\prod\limits_{i}{G_{i-1}}}{{CP1_i}^2}, {G_0}=1 $$"></p><p>
+where <i>CP1<sub>i</sub></i> and <i>G<sub>i</sub></i> are the
+equivalent compression points and gains of the ith RF/analog block.
+</p><pre class="codeinput">        <span class="keyword">function</span> CPtotal=cp1(obj)
+        <span class="comment">% cp1 Returns the equivalent 1dB compression point of the RF tuner.</span>
+        <span class="comment">%</span>
+        <span class="comment">% Cptotal=cp1(OBJECT) - Returns the equivalent 1dB compression point of the RF</span>
+        <span class="comment">% tuner OBJECT.</span>
+
+
+            <span class="comment">%get the voltage gain of the blocks respectivelly the input</span>
+            <span class="comment">%and output impedences, to compute the available gain</span>
+            G=[];
+            ZIN=[];
+            ZOUT=[];
+            cp1=[];
+            blocks = fieldnames(obj.Architecture);
+            [a,b] = size(blocks);
+            <span class="keyword">for</span> i=1:a
+                componentname=char(blocks(i));
+                G=[G obj.Architecture.(componentname).gain];
+                ZIN=[ZIN obj.Architecture.(componentname).Zin];
+                ZOUT=[ZOUT obj.Architecture.(componentname).Zout];
+                cp1=[cp1 obj.Architecture.(componentname).compoint];
+            <span class="keyword">end</span>
+            <span class="comment">%voltage gain = Zload/(Zout + Zin)*voltage gain without load</span>
+            <span class="comment">%set the last load to be infinite</span>
+            ZIN=[ZIN ZIN(end)];
+            voltage_gain=ZIN(2:end)./(ZOUT+ZIN(2:end)).*G;
+            power_gain=(ZIN(1:end-1)./ZIN(2:end)).*(G.^2);
+
+            CPtot=1/(cp1(1)^2);
+            Gtot=(G(1)^2);
+            <span class="keyword">for</span> i=2:length(cp1)
+                CPtot=CPtot+Gtot/(cp1(i)^2);
+                Gtot=Gtot*(G(i)^2);
+            <span class="keyword">end</span>
+            CPtotal=1/sqrt(CPtot);
+            CPtotal=10*log10(CPtotal);
+        <span class="keyword">end</span>
+</pre><h2>nf@TunerClass<a name="12"></a></h2><pre>NF=nf(OBJECT)</pre><p>Returns the overall noise figure of the RF tuner. The noise figure is computed from the equivalent temperature with the next formula:</p><p><img src="TunerClass_eq76812.png" alt="$$ NF=10*log_{10}(T_{total}/290+1)$$"></p><p>
+where <i>T<sub>total</sub ></i> is the RF tuner equivalent
+temperature.
+</p><pre class="codeinput">        <span class="keyword">function</span> noisefigure=nf(obj)
+        <span class="comment">% Returns the overall noise figure of the RF tuner.</span>
+        <span class="comment">%</span>
+        <span class="comment">%  NF=nf(OBJECT)</span>
+        <span class="comment">%</span>
+        <span class="comment">% Returns the overall noise figure of the RF tuner.</span>
+            Ttotal=obj.temp;
+            noisefigure=10*log10(Ttotal/290+1);
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> output=cnr(obj,A,Fc,OverSamplingRatio)
+</pre><pre class="codeinput">            <span class="comment">%CNR Carrier-to-noise ratio</span>
+            <span class="comment">%</span>
+            <span class="comment">%[cnr,obj]=CNR(obj,Fc,OverSamplingRatio)</span>
+            <span class="comment">%</span>
+            <span class="comment">%CNR(obj) Generates a carrier signal with A=-100dB amplitude,</span>
+            <span class="comment">%Fc=1e3 frequency at the sampling frequency Fs=Fc*1e3 and calls</span>
+            <span class="comment">%run(obj) to process the carrier. The return value is the</span>
+            <span class="comment">%CNR measured in the received signal</span>
+            <span class="comment">%</span>
+            <span class="comment">%CNR(obj,A) Generates a carrier with the specified amplitude A,</span>
+            <span class="comment">%Fc=1e3 frequency at the sampling frequency Fs=Fc*1e3 and calles</span>
+            <span class="comment">%run(obj) to receive the carrier. The return value is the</span>
+            <span class="comment">%CNR measured in the received signal</span>
+</pre><h2>cnr<a name="14"></a></h2><pre class="codeinput">            <span class="keyword">switch</span> nargin
+                <span class="keyword">case</span> 1
+                    A=10^(-100/20);
+                    Fc=1e3;
+                    OverSamplingRatio=1e3;
+                <span class="keyword">case</span> 2
+                    A=10^(A/20);
+                    Fc=1e3;
+                    OverSamplingRatio=1e3;
+                <span class="keyword">case</span> 3
+                    A=10^(A/20);
+                    OverSamplingRatio=1e3;
+                <span class="keyword">case</span> 4
+                     A=10^(A/20);
+            <span class="keyword">end</span>
+
+            time=0:1/(Fc*OverSamplingRatio):10/Fc;
+            carrier=SignalClass(A*exp(1i*2*pi*Fc*time),Fc*OverSamplingRatio);
+            received=obj.run(carrier);
+            <span class="comment">%detect the carrier power (the peak in the signal spectrum</span>
+            <span class="comment">%is considered the carrier)</span>
+            spectrum=abs(fft(received.Samples)/received.length);
+            [m1,i1]=max(spectrum);
+            <span class="comment">%compute the overall power of the signal</span>
+            <span class="comment">%noise=received - SignalClass(m1*sin(2*pi*Fc*time),Fc*OverSamplingRatio,0);</span>
+            m2=sum(spectrum(1:i1-OverSamplingRatio/2))+sum(spectrum(i1+OverSamplingRatio/2:end));
+            <span class="comment">%m3=noise.power;</span>
+            <span class="comment">%CNR = carrier power / noise power</span>
+            <span class="comment">%noise power is considered to be equal to overall signal power</span>
+            <span class="comment">%- carrier power</span>
+            <span class="comment">%CNR = carrier power / (signal power - carrier power)</span>
+            output=10*log10(m1/m2);
+            <span class="comment">%output=10*log10(m1/m3);</span>
+</pre><pre class="codeinput">        <span class="keyword">end</span>
+</pre><pre class="codeinput">    <span class="keyword">end</span>
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.10<br></p></div><!--
+##### SOURCE BEGIN #####
+% TunerClass 
+% Aggregate class of RF/analog blocks to create RF tuner
+% composite models.
+%
+% TunerClass methods:
+%   run - compute the response the an input signal
+%
+% TunerClass parents:
+%   BlockClass - RF/analog block aggregate class.
+%
+% TunerClass properties (inherited from BlockClass)
+%   Architecture - RF tuner architecture.
+%   Signal -output signal of the RF tuner.
+%   Zin - antenna impedance, default value 50 Ohm.
+%   Zout - receiver output impedance, default value INF.
+%
+% See also: BaseClass, SignalClass, AttributeClass, BlockClass, GainClass,
+% NoiseClass, FreqSelClass, FreqConvClass, PhaseNoiseClass, IQImbalClass.
+%
+classdef TunerClass < BlockClass
+%% TunerClass
+% Parent class: <BlockClass.html BlockClass>.
+% Aggregate class of RF/analog block to create behavioral RF tuner
+% models.
+
+%% Inherited Properties
+% <BlockClass.html BlockClass>
+%
+% * *Architecture* - RF tuner architecture.
+% * *Signal* -output signal of the RF tuner.
+% * *Zin* - antenna impedance, default value 50 Ohm.
+% * *Zout* - receiver output impedance, default value INF.
+% * *Name* - name of the object.
+%
+%% Methods
+% * <TunerClass.html#11 constructor>
+% * <TunerClass.html#12 run>
+% * <TunerClass.html#13 temp>
+% * <TunerClass.html#14 nf>
+
+%% Inherited methods
+% <BlockClass.html BlockClass>
+% * <BlockClass.html#15 add>
+% * <BlockClass.html#16 getstructure>
+% * <BlockClass.html#17 gain>
+methods
+        %% TunerClass@TunerClass
+        %
+        %  OBJ=TunerClass(NAME);
+        %
+        % Returns an object of TunerClass. NAME is written to TunerClass/Name
+        % property. Zin, Zout and Signal are initialized to 50 Ohm, INF, and
+        % SignalClass(0,0).
+        %
+        function obj=TunerClass(name)
+        % TunerClass - Object constructor
+        %
+        %   OBJ=TunerClass(NAME) - NAME is written to TunerClass/Name
+        %   property. Zin, Zout and TunerClass/Signal are initialized
+        %   to 50 Ohm, INF, and SignalClass(0,0).
+        %
+        % See also: TunerClass/run, TunerClass/nf
+        %
+
+            obj=obj@BlockClass(name);
+            obj.Zin=50;
+            obj.Zout=50;
+            obj.Signal=SignalClass(0,1);
+
+        end
+         %% run@TunerClass
+         % 
+         %  OBJ=run(OBJECT,INP)
+         %
+         % Computes the output of the RF tuner to signal |INP|. The funtion 
+         % returns an object of TunerClass with Signal property updated with 
+         % the output of the RF tuner.
+         %
+         %  [OBJ,OUTP]=run(OBJECT,INP)
+         %
+         % Computes the output of the RF tuner to signal |INP|.
+         % The method returns an object of TunerClass with the updated 
+         % Signal property and the output signal |OUTP| of the RF tuner.
+         % 
+         function outp=run(obj,inp)
+         %PROCESS Computes the response of the component to a signal
+         %
+         %   OBJ=run(OBJECT,INP) Computes the output of the receiver to
+         %   signal INP. The funtion returns an object of TunerClass with 
+         %   Signal property updated with the output of the RF tuner.
+         %
+         %   [obj,outp]=obj.run(inp) Computes the output of the RF tuner
+         %   to signal INP. The method returns an object of TunerClass with 
+         %   the updated Signal property and the output signal OUTP of the
+         %   RF tuner. 
+         %
+         % See also: TunerClass/TunerClass, TunerClass/nf
+         %
+             blocks = fieldnames(obj.Architecture);
+             [a,b] = size(blocks);
+             componentname=char(blocks(1));
+             outp=obj.Architecture.(componentname).run(inp);
+             %obj.Architecture.(componentname)=obj.Architecture.(componentname).run(inp);
+             %outp=obj.Architecture.(componentname).Signal;
+             for i=2:a
+                 componentname=char(blocks(i));
+                 outp=obj.Architecture.(componentname).run(outp);
+                 %obj.Architecture.(componentname)=obj.Architecture.(componentname).run(outp);
+                 %outp=obj.Architecture.(componentname).Signal;
+             end
+             obj.Signal=SignalClass(outp);
+         end
+        %% gain@TunerClass
+        % 
+        %  Gtotal=gain(OBJECT)
+        %
+        % Returns the equivalent gain of the RF tuner |OBJECT|. The
+        % equivalent gain is computed with:
+        %
+        % $$ G_{total}=\prod\limits_i{G_i} $$
+        %
+        % <html>
+        % where <i>G<sub>i</sub></i> are the
+        % equivalent gains of the ith RF/analog block.
+        % </html>
+        
+        function Gtotal=gain(obj)
+        % GAIN Returns the equivalent gain of the RF tuner.
+        %
+        % Gtotal=gain(OBJECT) - Returns the equivalent gain of the RF
+        % tuner OBJECT. 
+        
+
+            %get the voltage gain of the blocks respectivelly the input
+            %and output impedences, to compute the available gain
+            G=[];
+            ZIN=[];
+            ZOUT=[];
+            blocks = fieldnames(obj.Architecture);
+            [a,b] = size(blocks);
+            for i=1:a
+                componentname=char(blocks(i));
+                G=[G obj.Architecture.(componentname).gain];
+                ZIN=[ZIN obj.Architecture.(componentname).Zin];
+                ZOUT=[ZOUT obj.Architecture.(componentname).Zout];
+            end
+            %voltage gain = Zload/(Zout + Zin)*voltage gain without load
+            %set the last load to be infinite
+            ZIN=[ZIN ZIN(end)];
+            voltage_gain=ZIN(2:end)./(ZOUT+ZIN(2:end)).*G;
+            power_gain=(ZIN(1:end-1)./ZIN(2:end)).*(G.^2);
+            
+            Gtotal=G(1);
+            for i=2:length(G)
+                Gtotal=Gtotal*G(i);
+            end
+
+        end
+        %% IMGs@TunerClass
+        % 
+        %  EVM_IMG=IMGsOBJECT)
+        %
+        % Returns the equivalent image suppression of the RF tuner |OBJECT|. The
+        % equivalent image suppression is computed with:
+        %
+        % $$ EVM_{IMG}=\sqrt {{10}^{\frac{IMGs}{10}}} $$
+        %
+        % <html>
+        % where <i>IMG</i> is the
+        % equivalent image supression of the mixer RF/analog block.
+        % </html>
+        
+        function IMGs=EVM_IMG(obj)
+        % GAIN Returns the equivalent gain of the RF tuner.
+        %
+        % Gtotal=gain(OBJECT) - Returns the equivalent gain of the RF
+        % tuner OBJECT. 
+        
+
+            %get the voltage gain of the blocks respectivelly the input
+            %and output impedences, to compute the available gain
+            G=[];
+            ZIN=[];
+            ZOUT=[];
+            blocks = fieldnames(obj.Architecture);
+            [a,b] = size(blocks);
+            for i=1:a
+                componentname=char(blocks(i));
+                G=[G obj.Architecture.(componentname).gain];
+                ZIN=[ZIN obj.Architecture.(componentname).Zin];
+                ZOUT=[ZOUT obj.Architecture.(componentname).Zout];
+            end
+            %voltage gain = Zload/(Zout + Zin)*voltage gain without load
+            %set the last load to be infinite
+            ZIN=[ZIN ZIN(end)];
+            voltage_gain=ZIN(2:end)./(ZOUT+ZIN(2:end)).*G;
+            power_gain=(ZIN(1:end-1)./ZIN(2:end)).*(G.^2);
+            
+            Gtotal=G(1);
+            for i=2:length(G)
+                Gtotal=Gtotal*G(i);
+            end
+
+        end
+        %% temp@TunerClass
+        % 
+        %  Ttotal=temp(OBJECT)
+        %
+        % Returns the equivalent temperature of the RF tuner |OBJECT|. The
+        % equivalent temperature is computed with:
+        %
+        % $$ T_{total}=\sum\limits_i \frac{T_i}{\prod\limits_{i-1}{G_i}} , {G_0}=1  $$
+        %
+        % <html>
+        % where <i>T<sub>i</sub></i> and <i>G<sub>i</sub></i> are the
+        % equivalent temperatures and power gains of the ith RF/analog block.
+        % </html>
+        
+        function Ttotal=temp(obj)
+        % TEMP Returns the equivalent temperature of the RF tuner.
+        %
+        % Ttotal=temp(OBJECT) - Returns the equivalent temperature of the RF
+        % tuner OBJECT. 
+        
+
+            %get the voltage gain of the blocks respectivelly the input
+            %and output impedences, to compute the available gain
+            G=[];
+            ZIN=[];
+            ZOUT=[];
+            T=[];
+            blocks = fieldnames(obj.Architecture);
+            [a,b] = size(blocks);
+            for i=1:a
+                componentname=char(blocks(i));
+                G=[G obj.Architecture.(componentname).gain];
+                ZIN=[ZIN obj.Architecture.(componentname).Zin];
+                ZOUT=[ZOUT obj.Architecture.(componentname).Zout];
+                T=[T obj.Architecture.(componentname).temp];
+            end
+            %voltage gain = Zload/(Zout + Zin)*voltage gain without load
+            %set the last load to be infinite
+            ZIN=[ZIN ZIN(end)];
+            voltage_gain=ZIN(2:end)./(ZOUT+ZIN(2:end)).*G;
+            power_gain=(ZIN(1:end-1)./ZIN(2:end)).*(G.^2);
+            
+            Ttotal=T(1);
+            Gtotal=power_gain(1);
+            for i=2:length(T)
+                Ttotal=Ttotal+T(i)/Gtotal;
+                Gtotal=Gtotal*power_gain(i);
+            end
+
+        end
+        %% cp1@TunerClass
+        % 
+        %  cp1total=CP1(OBJECT)
+        %
+        % Returns the equivalent 1dB compression point of the RF tuner |OBJECT|. The
+        % equivalent 1dB compression point is computed with:
+        %
+        % $$ \frac{1}{CP1_{total}^2}=\sum\limits_i \frac{\prod\limits_{i}{G_{i-1}}}{{CP1_i}^2}, {G_0}=1 $$
+        %
+        % <html>
+        % where <i>CP1<sub>i</sub></i> and <i>G<sub>i</sub></i> are the
+        % equivalent compression points and gains of the ith RF/analog block.
+        % </html>
+        
+        function CPtotal=cp1(obj)
+        % cp1 Returns the equivalent 1dB compression point of the RF tuner.
+        %
+        % Cptotal=cp1(OBJECT) - Returns the equivalent 1dB compression point of the RF
+        % tuner OBJECT. 
+        
+
+            %get the voltage gain of the blocks respectivelly the input
+            %and output impedences, to compute the available gain
+            G=[];
+            ZIN=[];
+            ZOUT=[];
+            cp1=[];
+            blocks = fieldnames(obj.Architecture);
+            [a,b] = size(blocks);
+            for i=1:a
+                componentname=char(blocks(i));
+                G=[G obj.Architecture.(componentname).gain];
+                ZIN=[ZIN obj.Architecture.(componentname).Zin];
+                ZOUT=[ZOUT obj.Architecture.(componentname).Zout];
+                cp1=[cp1 obj.Architecture.(componentname).compoint];
+            end
+            %voltage gain = Zload/(Zout + Zin)*voltage gain without load
+            %set the last load to be infinite
+            ZIN=[ZIN ZIN(end)];
+            voltage_gain=ZIN(2:end)./(ZOUT+ZIN(2:end)).*G;
+            power_gain=(ZIN(1:end-1)./ZIN(2:end)).*(G.^2);
+           
+            CPtot=1/(cp1(1)^2);
+            Gtot=(G(1)^2);
+            for i=2:length(cp1)
+                CPtot=CPtot+Gtot/(cp1(i)^2);
+                Gtot=Gtot*(G(i)^2);
+            end
+            CPtotal=1/sqrt(CPtot);
+            CPtotal=10*log10(CPtotal);
+        end
+        %% nf@TunerClass
+        % 
+        %  NF=nf(OBJECT)
+        %
+        % Returns the overall noise figure of the RF tuner. The noise
+        % figure is computed from the equivalent temperature with the next
+        % formula:
+        %
+        % $$ NF=10*log_{10}(T_{total}/290+1)$$
+        %
+        % <html>
+        % where <i>T<sub>total</sub ></i> is the RF tuner equivalent
+        % temperature.
+        % </html>
+        function noisefigure=nf(obj)
+        % Returns the overall noise figure of the RF tuner. 
+        % 
+        %  NF=nf(OBJECT)
+        %
+        % Returns the overall noise figure of the RF tuner. 
+            Ttotal=obj.temp;    
+            noisefigure=10*log10(Ttotal/290+1);
+        end        
+        function output=cnr(obj,A,Fc,OverSamplingRatio)
+            %CNR Carrier-to-noise ratio
+            %
+            %[cnr,obj]=CNR(obj,Fc,OverSamplingRatio)
+            %
+            %CNR(obj) Generates a carrier signal with A=-100dB amplitude, 
+            %Fc=1e3 frequency at the sampling frequency Fs=Fc*1e3 and calls 
+            %run(obj) to process the carrier. The return value is the
+            %CNR measured in the received signal
+            %
+            %CNR(obj,A) Generates a carrier with the specified amplitude A,
+            %Fc=1e3 frequency at the sampling frequency Fs=Fc*1e3 and calles 
+            %run(obj) to receive the carrier. The return value is the
+            %CNR measured in the received signal
+            
+            %% cnr
+            %
+            switch nargin
+                case 1
+                    A=10^(-100/20);
+                    Fc=1e3;
+                    OverSamplingRatio=1e3;
+                case 2
+                    A=10^(A/20);
+                    Fc=1e3;
+                    OverSamplingRatio=1e3;
+                case 3
+                    A=10^(A/20);
+                    OverSamplingRatio=1e3;
+                case 4
+                     A=10^(A/20);
+            end
+
+            time=0:1/(Fc*OverSamplingRatio):10/Fc;
+            carrier=SignalClass(A*exp(1i*2*pi*Fc*time),Fc*OverSamplingRatio);
+            received=obj.run(carrier);
+            %detect the carrier power (the peak in the signal spectrum
+            %is considered the carrier)
+            spectrum=abs(fft(received.Samples)/received.length);
+            [m1,i1]=max(spectrum);
+            %compute the overall power of the signal
+            %noise=received - SignalClass(m1*sin(2*pi*Fc*time),Fc*OverSamplingRatio,0);
+            m2=sum(spectrum(1:i1-OverSamplingRatio/2))+sum(spectrum(i1+OverSamplingRatio/2:end));
+            %m3=noise.power;
+            %CNR = carrier power / noise power
+            %noise power is considered to be equal to overall signal power
+            %- carrier power
+            %CNR = carrier power / (signal power - carrier power)
+            output=10*log10(m1/m2);
+            %output=10*log10(m1/m3);
+        end
+    end
+end
+##### SOURCE END #####
+--></body></html>

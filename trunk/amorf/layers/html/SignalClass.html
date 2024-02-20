@@ -1,0 +1,1051 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      --><title>SignalClass</title><meta name="generator" content="MATLAB 7.10"><meta name="date" content="2011-09-21"><meta name="m-file" content="SignalClass"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">SignalClass</a></li><li><a href="#3">Properties</a></li><li><a href="#4">Methods</a></li><li><a href="#6">Samples</a></li><li><a href="#7">Fs (or Bw)</a></li><li><a href="#8">Fc</a></li><li><a href="#9">Domain</a></li><li><a href="#10">SNR</a></li><li><a href="#11">Name</a></li><li><a href="#13">SignalClass</a></li><li><a href="#14">flip@SignalClass</a></li><li><a href="#15">power@SignalClass</a></li><li><a href="#16">length@SignalClass</a></li><li><a href="#17">plot@SignalClass</a></li><li><a href="#18">dB@SignalClass</a></li><li><a href="#19">dBm@SignalClass</a></li><li><a href="#20">phase@SignalClass</a></li><li><a href="#21">freq@SignalClass</a></li><li><a href="#22">time@SignalClass</a></li><li><a href="#23">operations</a></li></ul></div><pre class="codeinput"><span class="comment">% SignalClass The class for the 'signals' in amoRF toolbox</span>
+<span class="comment">%</span>
+<span class="comment">%    This class is due to the abstraction of the 'signal' notion. It is</span>
+<span class="comment">%    derived form BaseClass.</span>
+<span class="comment">%</span>
+<span class="comment">% SignalClass properties:</span>
+<span class="comment">%   Samples - Signal samples.</span>
+<span class="comment">%   Fs - Sampling frequency of the samples</span>
+<span class="comment">%   Fc - Center frecuency</span>
+<span class="comment">%   Domain - Time of Frequncy</span>
+<span class="comment">%   SNR - Signal-to-noise-ration of the stored signal.</span>
+<span class="comment">%</span>
+<span class="comment">% SignalClass methods:</span>
+<span class="comment">%   SignalClass - Constructor</span>
+<span class="comment">% 	flip - Reverse signal samples</span>
+<span class="comment">%	power - Measure the power of signal</span>
+<span class="comment">%	length - Signal length</span>
+<span class="comment">%	plot - Plot signal</span>
+<span class="comment">%	dB - Amplitude spectrum of signal in decibels</span>
+<span class="comment">%	dBm - Amplitude spectrum of signal in dBm.</span>
+<span class="comment">%	phase - Phase spectrum of the signal</span>
+<span class="comment">%	freq - Set Domain to 'Frequency'</span>
+<span class="comment">%	time - Set Domain to 'Time'</span>
+<span class="comment">%	operations - arithmetic operations</span>
+<span class="comment">%</span>
+<span class="comment">% SignalClass parents:</span>
+<span class="comment">%   BaseClass - Superclass of amoRF toolbox.</span>
+<span class="comment">%</span>
+<span class="comment">% See also: BaseClass, AttributeClass, BlockClass, TunerClass.</span>
+
+<span class="keyword">classdef</span> SignalClass
+</pre><h2>SignalClass<a name="2"></a></h2><p>Parent class: <a href="BaseClass.html">BaseClass</a>. SignalClass is one of the basic and most often used class by amoRF toolbox. This class is due to the abstraction of the 'signal' notion.</p><h2>Properties<a name="3"></a></h2><div><ul><li><a href="SignalClass.html#6">Samples</a></li><li><a href="SignalClass.html#7">Fs</a></li><li><a href="SignalClass.html#8">Fc</a></li><li><a href="SignalClass.html#9">Domain</a></li><li><a href="SignalClass.html#10">SNR</a></li><li><a href="SignalClass.html#11">Name</a></li></ul></div><h2>Methods<a name="4"></a></h2><div><ul><li><a href="SignalClass.html#13">SignalClass</a></li><li><a href="SignalClass.html#14">power</a></li><li><a href="SignalClass.html#15">length</a></li><li><a href="SignalClass.html#16">plot</a></li><li><a href="SignalClass.html#17">dB</a></li><li><a href="SignalClass.html#18">dBm</a></li><li><a href="SignalClass.html#19">phase</a></li><li><a href="SignalClass.html#20">freq</a></li><li><a href="SignalClass.html#21">time</a></li><li><a href="SignalClass.html#22">operations</a></li></ul></div><pre class="codeinput">    properties
+</pre><pre class="codeinput">        <span class="comment">% Property field to store the samples of a signal. Samples can be</span>
+        <span class="comment">% real or complex valued.</span>
+        Samples
+</pre><h2>Samples<a name="6"></a></h2><p>Property field to store the samples of a signal. Samples can be real or complex valued.</p><pre class="codeinput">        <span class="comment">% The sampling frequency of the signal.</span>
+        Fs
+</pre><h2>Fs (or Bw)<a name="7"></a></h2><p>The sampling frequency of the signal.</p><p>
+<table border=1>
+<tr><td>Model</td><td>Fs Behavior</td></tr>
+<tr><td>Passband</td><td>Fs is the sampling frequency of the signal</td></tr>
+<tr><td>Baseband</td><td>Fs stores the bandwidth of a baseband signal</td></tr>
+</table>
+</p><pre class="codeinput">        <span class="comment">% Center frequency.</span>
+        Fc=0
+</pre><h2>Fc<a name="8"></a></h2><p>Center frequency - The amoRF allows both passband and baseband (a.k.a.) lowpass equivalent models. The default value of <b>Fc</b> is equal to 0 Hz, meaning the signal is a passband signal. Setting <b>Fc</b> to a non-zero value will result in a lowpass equivalent signal.</p><pre class="codeinput">        <span class="comment">% Domain property is used by the plot@SignalClass method.</span>
+        Domain=<span class="string">'time'</span>
+</pre><h2>Domain<a name="9"></a></h2><p>This property is used by the <b>plot</b> method of a signal object.</p><p>
+<table border=1>
+<tr><td>Domain</td><td>Behavior</td></tr>
+<tr><td>'Time'</td><td>The signal is plotted in the time domain</td></tr>
+<tr><td>'Frequency'</td><td>The signal is plotted in the frequency domain</td></tr>
+</table>
+</p><p>Default value is 'time'</p><pre class="codeinput">        <span class="comment">% Signal-to-noise ratio of the signal at room temperature</span>
+        SNR
+</pre><h2>SNR<a name="10"></a></h2><p>Signal-to-noise ratio of the signal stored in the object.</p><pre class="codeinput">        <span class="comment">%Name of the the object. Default values is empty string.</span>
+        Name=<span class="string">''</span>
+</pre><h2>Name<a name="11"></a></h2><p>Name of the the object. Default values is empty string.</p><pre class="codeinput">    <span class="keyword">end</span>
+    methods
+</pre><h2>SignalClass<a name="13"></a></h2><p>The constructor function. When a SignalClass object is initialized, the thermal noise floor is also added to the signal. The thermal noise floor is computed on a 1 Ohm impedance, 1 Hz noise bandwidth at room temperature (300 Kelvin). This gives a teoretical limit of -174 dBm noise floor.</p><pre>OBJ=SignalClass(OBJECT);</pre><p>The copy constructor of SignalClass. The return values <tt>OBJ</tt> is a copy of <tt>OBJECT</tt> that belongs to SignalClass.</p><pre>OBJ=SignalClass(SAMPLES, FS)</pre><p>The input <tt>SAMPLES</tt> is recommended to be a column vector. <tt>FS</tt> is a scalar value of the signal's sampling frequency. By default the central frequency <b>Fc</b> property is set to 0 Hz. This constructor is recommended to be used for passband signal model.</p><pre>OBJ=SignalClass(SAMPLES, BW, FC)</pre><p>This form of the constructor should be used to instantiate a baseband signal. <tt>BW</tt> is the bandwidth of the signal, <tt>FC</tt> the central frequency and <tt>SAMPLES</tt> are the signal samples.</p><pre class="codeinput">        <span class="keyword">function</span> obj=SignalClass(varargin)
+        <span class="comment">% SignalClass/SignalClass constructor function.  When a SignalClass</span>
+        <span class="comment">% object is initialized, the thermal noise floor is also added to</span>
+        <span class="comment">% the signal. The thermal noise floor is computed on a 1 Ohm</span>
+        <span class="comment">% impedance, 1 Hz noise bandwidth at room temperature (300 Kelvin).</span>
+        <span class="comment">% This gives a teoretical limit of -174 dBm noise floor.</span>
+        <span class="comment">%</span>
+        <span class="comment">%   OBJ=SignalClass(OBJECT) - The copy constructor of SignalClass.</span>
+        <span class="comment">%   The return values OBJ is a copy of OBJECT that belongs to</span>
+        <span class="comment">%   SignalClass.</span>
+        <span class="comment">%</span>
+        <span class="comment">%	OBJ=SignalClass(SAMPLES, FS) -  The input SAMPLES is</span>
+        <span class="comment">%	recommended to be a column vector. FS is a scalar value of</span>
+        <span class="comment">%	the signal's sampling frequency. By default the central</span>
+        <span class="comment">%	frequency Fc property is set to 0 Hz. This constructor is</span>
+        <span class="comment">%	recommended to be used for passband signal model.</span>
+        <span class="comment">%</span>
+        <span class="comment">%   OBJ=SignalClass(SAMPLES, BW, FC) - This form of the constructor</span>
+        <span class="comment">%   should be used to instantiate a baseband signal. BW is the</span>
+        <span class="comment">%   bandwidth of the signal, FC the central frequency and SAMPLES</span>
+        <span class="comment">%   are the signal samples.</span>
+        <span class="comment">%</span>
+        <span class="comment">% See also: SignalClass/flip, SignalClass/length, SignalClass/plot,</span>
+        <span class="comment">% SignalClass/dB, SignalClass/phase, SignalClass/dBm,</span>
+        <span class="comment">% SignalClass/power.</span>
+            R=50;
+            <span class="keyword">switch</span> nargin
+                <span class="keyword">case</span> 1
+                    obj=varargin{1};
+                    <span class="keyword">return</span>;
+                <span class="keyword">case</span> 2
+                    obj.Samples=varargin{1};
+                    obj.Fs=varargin{2};
+                <span class="keyword">case</span> 3
+                    obj.Samples=varargin{1};
+                    obj.Fs=varargin{2};
+                    obj.Fc=varargin{3};
+                <span class="keyword">case</span> 4
+                    obj.Samples=varargin{1};
+                    obj.Fs=varargin{2};
+                    obj.Fc=varargin{3};
+                    obj.SNR=varargin{4};
+                <span class="keyword">case</span> 5
+                    obj.Samples=varargin{1};
+                    obj.Fs=varargin{2};
+                    obj.Fc=varargin{3};
+                    obj.SNR=varargin{4};
+                    R=varargin{5};
+            <span class="keyword">end</span>
+            Psignal=10*log10(obj.power/0.001);
+            noise= sqrt(1.38e-23*300*R)*randn(size(obj.Samples));
+            Pnoise=10*log10(1.38e-23*300*R/0.001);
+            obj.Samples=obj.Samples+noise;
+            obj.SNR=Psignal-Pnoise;
+        <span class="keyword">end</span>
+</pre><h2>flip@SignalClass<a name="14"></a></h2><pre>flip(SIGNAL);</pre><p>The <b>flip</b> method reverses samples stored in <tt>SIGNAL</tt>.</p><pre class="codeinput">        <span class="keyword">function</span> obj=flip(obj)
+        <span class="comment">% FLIP - Reverse samples stored in SignalClass object</span>
+        <span class="comment">%</span>
+        <span class="comment">%   flip(SIGNAL) - The method reverses samples stored in SIGNAL.</span>
+        <span class="comment">%</span>
+        <span class="comment">% See also: SignalClass/SignalClass, SignalClass/dB</span>
+            obj.Samples=obj.Samples(end:-1:1);
+        <span class="keyword">end</span>
+</pre><h2>power@SignalClass<a name="15"></a></h2><pre>POWER=power(OBJECT)</pre><p>The return value <tt>POWER</tt> is the average power of the OBJECT, measured on an <tt>1 Ohm</tt> resistor.</p><pre>POWER=power(OBJECT,R)</pre><p>The return value <tt>POWER</tt> is the average power of the OBJECT, measured on an <tt>R</tt> Ohm resistor.</p><pre class="codeinput">        <span class="keyword">function</span> output=power(obj,R)
+            <span class="comment">% POWER - Measure average power</span>
+            <span class="comment">%</span>
+            <span class="comment">%   POWER=power(OBJECT) The return value POWER is the</span>
+            <span class="comment">%   average power of the OBJECT, measured on an 1 Ohm</span>
+            <span class="comment">%   resistor.</span>
+            <span class="comment">%</span>
+            <span class="comment">%   POWER=power(OBJECT,R) The return value POWER is the</span>
+            <span class="comment">%   average power of the OBJECT, measured on an R Ohm</span>
+            <span class="comment">%   resistor.</span>
+            <span class="comment">%</span>
+            <span class="comment">% See also: SignalClass/SignalClass, SignalClass/dB</span>
+            <span class="keyword">switch</span> nargin
+                <span class="keyword">case</span> 1
+                    R=1;
+            <span class="keyword">end</span>
+            output=sum(obj.Samples.*conj(obj.Samples)/R)/obj.length;
+        <span class="keyword">end</span>
+</pre><h2>length@SignalClass<a name="16"></a></h2><pre>L=length(OBJECT);</pre><p>The return value <tt>L</tt> is the number of signal samples in <tt>OBJECT</tt>.</p><pre class="codeinput">        <span class="keyword">function</span> output=length(obj)
+        <span class="comment">% LENGTH - Signal samples length.</span>
+        <span class="comment">%</span>
+        <span class="comment">%	L=length(OBJECT) - The return value L|is the number of signal</span>
+        <span class="comment">%   samples in OBJECT.</span>
+        <span class="comment">%</span>
+        <span class="comment">% See also: SignalClass/SignalClass, SignalClass/Flip</span>
+            output=length(obj.Samples);
+        <span class="keyword">end</span>
+</pre><pre class="codeoutput">
+ans = 
+
+  SignalClass
+
+  Properties:
+    Samples: []
+         Fs: []
+         Fc: 0
+     Domain: 'time'
+        SNR: NaN
+       Name: ''
+
+
+</pre><h2>plot@SignalClass<a name="17"></a></h2><pre>plot(OBJECT)</pre><p>Plots the signal samples according the properties <b>Domain</b>, <b>Fs</b>, <b>Fc</b> and <b>Name</b>.</p><p>
+<table border=1>
+<tr><td>Domain</td><td>Samples</td><td>Behavior</td></tr>
+<tr><td>Time</td><td>Real</td><td>The <b>Samples</b> property is plotted in the time domain</td></tr>
+<tr><td>Time</td><td>Complex</td><td>The real and imaginary part of <b>Samples</b> property is plotted on two figures</td></tr>
+<tr><td>Frequency</td><td>Don't care</td><td>The amplitude and phase spectrum of <b>Samples</b> property are plotted</td></tr>
+</table>
+</p><pre class="codeinput">        <span class="keyword">function</span> plot(obj)
+            <span class="comment">% PLOT - Plot SignalClass object.</span>
+            <span class="comment">%</span>
+            <span class="comment">%   plot(OBJECT) plots the SignalClass object according to</span>
+            <span class="comment">%   it's properties. When Domain property is set to 'time' it</span>
+            <span class="comment">%   will plot the signal in time domain, otherwise it will plot</span>
+            <span class="comment">%   the aplitude and phase spectrum of the signal.</span>
+            <span class="comment">%</span>
+            <span class="comment">% See also: SignalClass/dB, SignalClass/dBm, SignalClass/phase,</span>
+            <span class="comment">% SignalClass/power.</span>
+            <span class="keyword">switch</span> upper(obj.Domain)
+                <span class="keyword">case</span> <span class="string">'TIME'</span>
+                    T=length(obj.Samples)/obj.Fs;
+                    x=1/obj.Fs:1/obj.Fs:T;
+                    <span class="keyword">switch</span> isreal(obj.Samples)
+                        <span class="keyword">case</span> 1
+                            plot(x,obj.Samples);
+                        <span class="keyword">case</span> 0
+                            subplot(2,1,1);
+                            plot(x,real(obj.Samples));
+                            ylabel(<span class="string">'Real part (V)'</span>);
+                            subplot(2,1,2);
+                            plot(x,imag(obj.Samples));
+                            ylabel(<span class="string">'Imaginary part (V)'</span>);
+                            xlabel(<span class="string">'Time (s)'</span>);
+                    <span class="keyword">end</span>
+                <span class="keyword">case</span> <span class="string">'FREQUENCY'</span>
+                    subplot(2,1,1);
+                    obj.dB;
+                    title(obj.Name);
+                    subplot(2,1,2);
+                    obj.phase;
+                    title(obj.Name);
+                    xlabel([<span class="string">'Frequency (Fs = '</span> num2str(obj.Fs) <span class="string">')'</span>]);
+                    ylabel(<span class="string">'Phase (rad)'</span>);
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+</pre><h2>dB@SignalClass<a name="18"></a></h2><pre>obj.dB</pre><p>Method <b>dB</b> plots the amplitude spectrum of <b>Samples</b> property in dB.</p><pre class="codeinput">        <span class="keyword">function</span> dB(obj)
+            <span class="comment">% DB - Amplitude spectrum plot of SignalClass object.</span>
+            <span class="comment">%</span>
+            <span class="comment">%   db(OBJECT) Plots the amplitude spectrum of the OBJECT in</span>
+            <span class="comment">%   decibel scale.</span>
+            <span class="comment">%</span>
+            <span class="comment">% See also:  SignalClass/plot, SignalClass/dBm, SignalClass/phase,</span>
+            <span class="comment">% SignalClass/power.</span>
+            l=length(obj.Samples);
+            a=abs(fftshift(fft(obj.Samples)))/l;
+            x=((1:l)/l*obj.Fs)-(obj.Fs/2)+obj.Fc;
+            plot(x,db(a));
+            xlabel([<span class="string">'Frequency (Fs = '</span> num2str(obj.Fs) <span class="string">')'</span>]);
+            ylabel(<span class="string">'Amplitude (dB)'</span>);
+        <span class="keyword">end</span>
+</pre><h2>dBm@SignalClass<a name="19"></a></h2><pre>dBm(OBJECT)</pre><p>Method <b>dBm</b> plots the ampltitude spectrum of the OBJECT in dBm, when a 50 Ohm reference impedance is considered.</p><pre>dBm(OBJECT, R)</pre><p>Method <b>dBm</b> plots the ampltitude spectrum of the OBJECT in dBm, where a R Ohm reference impedance is used.</p><pre class="codeinput">        <span class="keyword">function</span> dBm(obj,R)
+            <span class="comment">% DBM - Plot the amplitude spectrum in dBm  of SignalClass object.</span>
+            <span class="comment">%</span>
+            <span class="comment">%	dBm(OBJECT) - Plots the ampltitude spectrum of</span>
+            <span class="comment">%	the OBJECT in dBm, when a 50 Ohm reference impedance is</span>
+            <span class="comment">%	considered.</span>
+            <span class="comment">%</span>
+            <span class="comment">%	dBm(OBJECT, R) - Plots the ampltitude spectrum of the OBJECT</span>
+            <span class="comment">%   in dBm, where a R Ohm reference impedance is used.</span>
+            <span class="comment">%</span>
+            <span class="comment">% See also:  SignalClass/plot, SignalClass/dB, SignalClass/phase,</span>
+            <span class="comment">% SignalClass/power.</span>
+            <span class="keyword">switch</span> nargin
+                <span class="keyword">case</span> 1
+                    R=50;
+            <span class="keyword">end</span>
+            l=length(obj.Samples);
+            a=abs(fftshift(fft(obj.Samples)))/l;
+            <span class="comment">%x=((1:l)/l*obj.Fs)-(obj.Fs/2)+obj.Fc;</span>
+            x=((1:l)/l*obj.Fs)-(obj.Fs/2);
+            plot(x,10*log10(a.^2/0.001*R));
+            xlabel([<span class="string">'Frequency (Fs = '</span> num2str(obj.Fs) <span class="string">')'</span>]);
+            ylabel(<span class="string">'Amplitude (dBm)'</span>);
+        <span class="keyword">end</span>
+</pre><h2>phase@SignalClass<a name="20"></a></h2><pre>phase(OBJECT)</pre><p>Method <b>phase</b> plots the phase spectrum of <b>Samples</b> property.</p><pre class="codeinput">        <span class="keyword">function</span> phase(obj)
+            <span class="comment">% PHASE - Plot the amplitude spectrum of SignalClass object.</span>
+            <span class="comment">%</span>
+            <span class="comment">%   phase(OBJECT)</span>
+            <span class="comment">%</span>
+            <span class="comment">% See also:  SignalClass/plot, SignalClass/dB, SignalClass/dBm,</span>
+            <span class="comment">% SignalClass/power</span>
+                    p=phase(fftshift(fft(obj.Samples)));
+                    l=length(obj.Samples);
+                    x=((1:l)/l*obj.Fs)-(obj.Fs/2)+obj.Fc;
+                    plot(x,p/l);
+                    title(obj.Name);
+                    xlabel([<span class="string">'Frequency (Fs = '</span> num2str(obj.Fs) <span class="string">')'</span>]);
+                    ylabel(<span class="string">'Phase (rad)'</span>);
+        <span class="keyword">end</span>
+</pre><h2>freq@SignalClass<a name="21"></a></h2><pre>freq(OBJECT)</pre><p>Sets <b>Domain</b> property to 'Frequency'.</p><pre class="codeinput">        <span class="keyword">function</span> obj=freq(obj)
+            <span class="comment">% FREQ - Set Domain property to 'Frequency' of a SignalClass</span>
+            <span class="comment">% object.</span>
+            <span class="comment">%</span>
+            <span class="comment">%   freq(OBJECT)</span>
+            <span class="comment">%</span>
+            <span class="comment">% See also: SignalClass/SignalClass, SignalClass/time.</span>
+            obj.Domain=<span class="string">'FREQUENCY'</span>;
+        <span class="keyword">end</span>
+</pre><h2>time@SignalClass<a name="22"></a></h2><pre>time(OBJECT)</pre><p>Sets <b>Domain</b> property to 'Time'.</p><pre class="codeinput">        <span class="keyword">function</span> obj=time(obj)
+            <span class="comment">% Time - Set Domain property to 'Time' of a SignalClass</span>
+            <span class="comment">% object.</span>
+            <span class="comment">%</span>
+            <span class="comment">%   time(OBJECT)</span>
+            <span class="comment">%</span>
+            <span class="comment">% See also: SignalClass/SignalClass, SignalClass/freq.</span>
+            obj.Domain=<span class="string">'Time'</span>;
+        <span class="keyword">end</span>
+</pre><h2>operations<a name="23"></a></h2><p>Most arithmetic operations are overloaded for SignalClass objects.</p><pre>o1=SignalClass(sin(1:100),1);
+o2=SignalClass(cos(1:100),1);
+o3=o1+o2;</pre><pre class="codeinput">        <span class="keyword">function</span> obj=plus(obj,obj2)
+            <span class="keyword">if</span> isnumeric(obj)
+                obj=SignalClass(obj,obj2.Fs,obj2.Fc,obj2.SNR);
+            <span class="keyword">elseif</span> isnumeric(obj2)
+                obj2=SignalClass(obj2,obj.Fs,obj.Fc,obj.SNR);
+            <span class="keyword">end</span>
+            obj.Samples=obj.Samples+obj2.Samples;
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> obj=minus(obj,obj2)
+            <span class="keyword">if</span> isnumeric(obj)
+                obj=SignalClass(obj,obj2.Fs,obj2.Fc,obj2.SNR);
+            <span class="keyword">elseif</span> isnumeric(obj2)
+                obj2=SignalClass(obj2,obj.Fs,obj.Fc,obj.SNR);
+            <span class="keyword">end</span>
+            obj.Samples=obj.Samples-obj2.Samples;
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> obj=uminus(obj)
+            obj.Samples=-obj.Samples;
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> obj=abs(obj)
+            obj.Samples=obj.Samples.*conj(obj.Samples);
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> obj=times(obj,obj2)
+            <span class="keyword">if</span> isnumeric(obj)
+                obj=SignalClass(obj,obj2.Fs,obj2.Fc,obj2.SNR);
+            <span class="keyword">elseif</span> isnumeric(obj2)
+                obj2=SignalClass(obj2,obj.Fs,obj.Fc,obj.SNR);
+            <span class="keyword">end</span>
+            obj.Samples=obj.Samples.*obj2.Samples;
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> obj=lt(obj,obj2)
+            <span class="keyword">if</span> isnumeric(obj)
+                obj=SignalClass(obj,obj2.Fs,obj2.Fc,obj2.SNR);
+            <span class="keyword">elseif</span> isnumeric(obj2)
+                obj2=SignalClass(obj2,obj.Fs,obj.Fc,obj.SNR);
+            <span class="keyword">end</span>
+            obj.Samples=lt(obj.Samples,obj2.Samples);
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> obj=gt(obj,obj2)
+            <span class="keyword">if</span> isnumeric(obj)
+                obj=SignalClass(obj,obj2.Fs,obj2.Fc,obj2.SNR);
+            <span class="keyword">elseif</span> isnumeric(obj2)
+                obj2=SignalClass(obj2,obj.Fs,obj.Fc,obj.SNR);
+            <span class="keyword">end</span>
+            obj.Samples=gt(obj.Samples,obj2.Samples);
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> obj=le(obj,obj2)
+            <span class="keyword">if</span> isnumeric(obj)
+                obj=SignalClass(obj,obj2.Fs,obj2.Fc,obj2.SNR);
+            <span class="keyword">elseif</span> isnumeric(obj2)
+                obj2=SignalClass(obj2,obj.Fs,obj.Fc,obj.SNR);
+            <span class="keyword">end</span>
+            obj.Samples=le(obj.Samples,obj2.Samples);
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> obj=ge(obj,obj2)
+            <span class="keyword">if</span> isnumeric(obj)
+                obj=SignalClass(obj,obj2.Fs,obj2.Fc,obj2.SNR);
+            <span class="keyword">elseif</span> isnumeric(obj2)
+                obj2=SignalClass(obj2,obj.Fs,obj.Fc,obj.SNR);
+            <span class="keyword">end</span>
+            obj.Samples=ge(obj.Samples,obj2.Samples);
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> obj=and(obj,obj2)
+            <span class="keyword">if</span> isnumeric(obj)
+                obj=SignalClass(obj,obj2.Fs,obj2.Fc,obj2.SNR);
+            <span class="keyword">elseif</span> isnumeric(obj2)
+                obj2=SignalClass(obj2,obj.Fs,obj.Fc,obj.SNR);
+            <span class="keyword">end</span>
+            obj.Samples=and(obj.Samples,obj2.Samples);
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> obj=rdivide(obj,obj2)
+            <span class="keyword">if</span> isnumeric(obj)
+                obj=SignalClass(obj,obj2.Fs,obj2.Fc,obj2.SNR);
+            <span class="keyword">elseif</span> isnumeric(obj2)
+                obj2=SignalClass(obj2,obj.Fs,obj.Fc,obj.SNR);
+            <span class="keyword">end</span>
+            obj.Samples=rdivide(obj.Samples,obj2.Samples);
+        <span class="keyword">end</span>
+
+<span class="comment">%         function obj=subsref(obj,val)</span>
+<span class="comment">%             switch val(1).type</span>
+<span class="comment">%                 case '()'</span>
+<span class="comment">%                     %return the Samples shown by the index</span>
+<span class="comment">%                     obj=obj.Samples(val(1).subs{1});</span>
+<span class="comment">%                 case '.'</span>
+<span class="comment">%                     switch val(1).subs</span>
+<span class="comment">%                         case 'plot'</span>
+<span class="comment">%                             obj.plot;</span>
+<span class="comment">%                         case 'dB'</span>
+<span class="comment">%                             obj.dB;</span>
+<span class="comment">%                         case 'dBm'</span>
+<span class="comment">%                             obj.dBm;</span>
+<span class="comment">%                         case 'phase'</span>
+<span class="comment">%                             obj.phase</span>
+<span class="comment">%                         otherwise</span>
+<span class="comment">%                             try</span>
+<span class="comment">%                                 obj=obj.(val(1).subs);</span>
+<span class="comment">%                             catch</span>
+<span class="comment">%                                 error('Attempt to reference field of non-structure array');</span>
+<span class="comment">%                             end</span>
+<span class="comment">%                     end</span>
+<span class="comment">%             end</span>
+<span class="comment">%         end</span>
+<span class="comment">%</span>
+<span class="comment">%         function obj=subsasgn(obj,value)</span>
+<span class="comment">%             obj.Samples(value)=obj.Samples;</span>
+<span class="comment">%         end</span>
+<span class="comment">%</span>
+<span class="comment">%         function obj=subsindex(obj,value)</span>
+<span class="comment">%             obj.Samples=obj.Samples(value.subs{1});</span>
+<span class="comment">%         end</span>
+        <span class="keyword">function</span> stem(obj)
+            <span class="keyword">switch</span> upper(obj.Domain)
+                <span class="keyword">case</span> <span class="string">'TIME'</span>
+                    T=length(obj.Samples)/obj.Fs;
+                    x=1/obj.Fs:1/obj.Fs:T;
+                    stem(x,obj.Samples);
+                <span class="keyword">case</span> <span class="string">'FREQUENCY'</span>
+                    a=abs(fftshift(fft(obj.Samples)));
+                    p=phase(fftshift(fft(obj.Samples)));
+                    l=length(obj.Samples);
+                    x=((1:l)/l*obj.Fs)-(obj.Fs/2)+obj.Fc;
+                    subplot(2,1,1);
+                    stem(x,db(a/l));
+                    title(obj.Name);
+                    xlabel([<span class="string">'Frequency (Fs = '</span> num2str(obj.Fs) <span class="string">')'</span>]);
+                    ylabel(<span class="string">'Amplitude (db)'</span>);
+                    subplot(2,1,2);
+                    stem(x,p/l);
+                    title(obj.Name);
+                    xlabel([<span class="string">'Frequency (Fs='</span> num2str(obj.Fs) <span class="string">')'</span>]);
+                    ylabel(<span class="string">'Phase (rad)'</span>);
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> obj=transpose(obj)
+            obj.Samples=obj.Samples.';
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> obj=ctranspose(obj)
+            obj.Samples=obj.Samples';
+        <span class="keyword">end</span>
+</pre><pre class="codeinput">    <span class="keyword">end</span>
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.10<br></p></div><!--
+##### SOURCE BEGIN #####
+% SignalClass The class for the 'signals' in amoRF toolbox
+%
+%    This class is due to the abstraction of the 'signal' notion. It is
+%    derived form BaseClass.
+%
+% SignalClass properties:
+%   Samples - Signal samples.
+%   Fs - Sampling frequency of the samples
+%   Fc - Center frecuency
+%   Domain - Time of Frequncy
+%   SNR - Signal-to-noise-ration of the stored signal.
+%   
+% SignalClass methods:
+%   SignalClass - Constructor
+% 	flip - Reverse signal samples
+%	power - Measure the power of signal
+%	length - Signal length 
+%	plot - Plot signal
+%	dB - Amplitude spectrum of signal in decibels
+%	dBm - Amplitude spectrum of signal in dBm.
+%	phase - Phase spectrum of the signal
+%	freq - Set Domain to 'Frequency'
+%	time - Set Domain to 'Time'
+%	operations - arithmetic operations
+%
+% SignalClass parents:
+%   BaseClass - Superclass of amoRF toolbox.
+%
+% See also: BaseClass, AttributeClass, BlockClass, TunerClass.
+
+classdef SignalClass 
+%% SignalClass
+% Parent class: <BaseClass.html BaseClass>.
+% SignalClass is one of the basic and most often used class by amoRF
+% toolbox. This class is due to the abstraction of the 'signal' notion. 
+
+%% Properties
+% * <SignalClass.html#6 Samples>
+% * <SignalClass.html#7 Fs>
+% * <SignalClass.html#8 Fc>
+% * <SignalClass.html#9 Domain>
+% * <SignalClass.html#10 SNR>
+% * <SignalClass.html#11 Name>
+%
+%% Methods
+% * <SignalClass.html#13 SignalClass>
+% * <SignalClass.html#14 power>
+% * <SignalClass.html#15 length>
+% * <SignalClass.html#16 plot>
+% * <SignalClass.html#17 dB>
+% * <SignalClass.html#18 dBm>
+% * <SignalClass.html#19 phase>
+% * <SignalClass.html#20 freq>
+% * <SignalClass.html#21 time>
+% * <SignalClass.html#22 operations>
+%
+    properties
+        % Property field to store the samples of a signal. Samples can be
+        % real or complex valued.
+        Samples 
+        %% Samples
+        % Property field to store the samples of a signal. Samples can be
+        % real or complex valued.
+
+        % The sampling frequency of the signal.
+        Fs   
+        %% Fs (or Bw)
+        % The sampling frequency of the signal.
+        %
+        % <html>
+        % <table border=1>
+        % <tr><td>Model</td><td>Fs Behavior</td></tr>        
+        % <tr><td>Passband</td><td>Fs is the sampling frequency of the signal</td></tr>        
+        % <tr><td>Baseband</td><td>Fs stores the bandwidth of a baseband signal</td></tr>
+        % </table>
+        % </html>
+        %
+        
+        % Center frequency.
+        Fc=0 
+        %% Fc
+        % Center frequency - The amoRF allows both passband and baseband
+        % (a.k.a.) lowpass equivalent models. The default value of *Fc* is
+        % equal to 0 Hz, meaning the signal is a passband signal. Setting
+        % *Fc* to a non-zero value will result in a lowpass equivalent signal. 
+        
+        % Domain property is used by the plot@SignalClass method.
+        Domain='time'
+        %% Domain
+        % This property is used by the *plot* method of a signal object.
+        %
+        % <html>
+        % <table border=1>
+        % <tr><td>Domain</td><td>Behavior</td></tr>        
+        % <tr><td>'Time'</td><td>The signal is plotted in the time domain</td></tr>        
+        % <tr><td>'Frequency'</td><td>The signal is plotted in the frequency domain</td></tr>
+        % </table>
+        % </html>
+        % 
+        % Default value is 'time'
+        
+        % Signal-to-noise ratio of the signal at room temperature
+        SNR
+        %% SNR
+        % Signal-to-noise ratio of the signal stored in the object. 
+
+        %Name of the the object. Default values is empty string.
+        Name=''
+        %% Name
+        %
+        % Name of the the object. Default values is empty string.  
+
+    end
+    methods
+        %% SignalClass 
+        % The constructor function. When a SignalClass object is
+        % initialized, the thermal noise floor is also added to the signal. 
+        % The thermal noise floor is computed on a 1 Ohm impedance, 1 Hz
+        % noise bandwidth at room temperature (300 Kelvin). This gives a
+        % teoretical limit of -174 dBm noise floor.
+        %
+        %  OBJ=SignalClass(OBJECT);
+        %
+        % The copy constructor of SignalClass. The return
+        % values |OBJ| is a copy of |OBJECT| that belongs to SignalClass.
+        %
+        %  OBJ=SignalClass(SAMPLES, FS)
+        %
+        % The input |SAMPLES| is recommended to be a column vector. |FS| is
+        % a scalar value of the signal's sampling frequency. By default the
+        % central frequency *Fc* property is set to 0 Hz. This constructor 
+        % is recommended to be used for passband signal model.
+        %
+        %  OBJ=SignalClass(SAMPLES, BW, FC)
+        %
+        % This form of the constructor should be used to instantiate a 
+        % baseband signal. |BW| is the bandwidth of the signal, |FC| the
+        % central frequency and |SAMPLES| are the signal samples. 
+        function obj=SignalClass(varargin)
+        % SignalClass/SignalClass constructor function.  When a SignalClass
+        % object is initialized, the thermal noise floor is also added to 
+        % the signal. The thermal noise floor is computed on a 1 Ohm 
+        % impedance, 1 Hz noise bandwidth at room temperature (300 Kelvin).
+        % This gives a teoretical limit of -174 dBm noise floor.
+        %
+        %   OBJ=SignalClass(OBJECT) - The copy constructor of SignalClass.
+        %   The return values OBJ is a copy of OBJECT that belongs to
+        %   SignalClass. 
+        %
+        %	OBJ=SignalClass(SAMPLES, FS) -  The input SAMPLES is
+        %	recommended to be a column vector. FS is a scalar value of
+        %	the signal's sampling frequency. By default the central
+        %	frequency Fc property is set to 0 Hz. This constructor is
+        %	recommended to be used for passband signal model. 
+        %
+        %   OBJ=SignalClass(SAMPLES, BW, FC) - This form of the constructor
+        %   should be used to instantiate a baseband signal. BW is the
+        %   bandwidth of the signal, FC the central frequency and SAMPLES 
+        %   are the signal samples.
+        %
+        % See also: SignalClass/flip, SignalClass/length, SignalClass/plot,
+        % SignalClass/dB, SignalClass/phase, SignalClass/dBm,
+        % SignalClass/power.
+            R=50;
+            switch nargin
+                case 1
+                    obj=varargin{1};
+                    return;
+                case 2
+                    obj.Samples=varargin{1};
+                    obj.Fs=varargin{2};
+                case 3
+                    obj.Samples=varargin{1};
+                    obj.Fs=varargin{2};
+                    obj.Fc=varargin{3};
+                case 4
+                    obj.Samples=varargin{1};
+                    obj.Fs=varargin{2};
+                    obj.Fc=varargin{3};
+                    obj.SNR=varargin{4};
+                case 5
+                    obj.Samples=varargin{1};
+                    obj.Fs=varargin{2};
+                    obj.Fc=varargin{3};
+                    obj.SNR=varargin{4};
+                    R=varargin{5};
+            end
+            Psignal=10*log10(obj.power/0.001);
+            noise= sqrt(1.38e-23*300*R)*randn(size(obj.Samples));
+            Pnoise=10*log10(1.38e-23*300*R/0.001);
+            obj.Samples=obj.Samples+noise;
+            obj.SNR=Psignal-Pnoise;
+        end
+        %% flip@SignalClass
+        %
+        %  flip(SIGNAL);
+        %
+        % The *flip* method reverses samples stored in |SIGNAL|.
+        function obj=flip(obj)
+        % FLIP - Reverse samples stored in SignalClass object
+        %
+        %   flip(SIGNAL) - The method reverses samples stored in SIGNAL.
+        % 
+        % See also: SignalClass/SignalClass, SignalClass/dB
+            obj.Samples=obj.Samples(end:-1:1);
+        end
+        %% power@SignalClass
+        %
+        %  POWER=power(OBJECT)
+        %
+        % The return value |POWER| is the average power of the OBJECT,
+        % measured on an |1 Ohm| resistor.
+        %
+        %  POWER=power(OBJECT,R)
+        %
+        % The return value |POWER| is the average power of the OBJECT,
+        % measured on an |R| Ohm resistor.
+        %
+        function output=power(obj,R)
+            % POWER - Measure average power
+            %
+            %   POWER=power(OBJECT) The return value POWER is the
+            %   average power of the OBJECT, measured on an 1 Ohm
+            %   resistor.
+            %
+            %   POWER=power(OBJECT,R) The return value POWER is the
+            %   average power of the OBJECT, measured on an R Ohm
+            %   resistor.
+            % 
+            % See also: SignalClass/SignalClass, SignalClass/dB
+            switch nargin
+                case 1
+                    R=1;
+            end
+            output=sum(obj.Samples.*conj(obj.Samples)/R)/obj.length;
+        end
+        %% length@SignalClass
+        %
+        %  L=length(OBJECT);
+        %
+        % The return value |L| is the number of signal samples in |OBJECT|.
+        function output=length(obj)
+        % LENGTH - Signal samples length.
+        %
+        %	L=length(OBJECT) - The return value L|is the number of signal 
+        %   samples in OBJECT. 
+        %
+        % See also: SignalClass/SignalClass, SignalClass/Flip
+            output=length(obj.Samples);
+        end
+        %% plot@SignalClass
+        % 
+        %  plot(OBJECT)
+        %
+        % Plots the signal samples according the properties *Domain*, *Fs*,
+        % *Fc* and *Name*.
+        %
+        % <html>
+        % <table border=1>
+        % <tr><td>Domain</td><td>Samples</td><td>Behavior</td></tr>
+        % <tr><td>Time</td><td>Real</td><td>The <b>Samples</b> property is plotted in the time domain</td></tr>
+        % <tr><td>Time</td><td>Complex</td><td>The real and imaginary part of <b>Samples</b> property is plotted on two figures</td></tr>
+        % <tr><td>Frequency</td><td>Don't care</td><td>The amplitude and phase spectrum of <b>Samples</b> property are plotted</td></tr>
+        % </table>
+        % </html>
+        %
+        function plot(obj)
+            % PLOT - Plot SignalClass object.
+            %
+            %   plot(OBJECT) plots the SignalClass object according to
+            %   it's properties. When Domain property is set to 'time' it
+            %   will plot the signal in time domain, otherwise it will plot
+            %   the aplitude and phase spectrum of the signal.
+            %
+            % See also: SignalClass/dB, SignalClass/dBm, SignalClass/phase,
+            % SignalClass/power.
+            switch upper(obj.Domain)
+                case 'TIME'
+                    T=length(obj.Samples)/obj.Fs;
+                    x=1/obj.Fs:1/obj.Fs:T;
+                    switch isreal(obj.Samples)
+                        case 1
+                            plot(x,obj.Samples);
+                        case 0
+                            subplot(2,1,1);
+                            plot(x,real(obj.Samples));
+                            ylabel('Real part (V)');
+                            subplot(2,1,2);
+                            plot(x,imag(obj.Samples));
+                            ylabel('Imaginary part (V)');
+                            xlabel('Time (s)');
+                    end
+                case 'FREQUENCY'
+                    subplot(2,1,1);
+                    obj.dB;
+                    title(obj.Name);
+                    subplot(2,1,2);
+                    obj.phase;
+                    title(obj.Name);
+                    xlabel(['Frequency (Fs = ' num2str(obj.Fs) ')']);
+                    ylabel('Phase (rad)');                    
+            end
+        end
+        %% dB@SignalClass
+        %
+        %  obj.dB
+        %
+        % Method *dB* plots the amplitude spectrum of *Samples* property in
+        % dB.
+        function dB(obj)
+            % DB - Amplitude spectrum plot of SignalClass object.
+            %
+            %   db(OBJECT) Plots the amplitude spectrum of the OBJECT in
+            %   decibel scale.
+            % 
+            % See also:  SignalClass/plot, SignalClass/dBm, SignalClass/phase,
+            % SignalClass/power.
+            l=length(obj.Samples);
+            a=abs(fftshift(fft(obj.Samples)))/l;
+            x=((1:l)/l*obj.Fs)-(obj.Fs/2)+obj.Fc;
+            plot(x,db(a));
+            xlabel(['Frequency (Fs = ' num2str(obj.Fs) ')']);
+            ylabel('Amplitude (dB)');
+        end
+        %% dBm@SignalClass
+        %
+        %  dBm(OBJECT)
+        %
+        % Method *dBm* plots the ampltitude spectrum of the OBJECT
+        % in dBm, when a 50 Ohm reference impedance is considered.
+        %
+        %  dBm(OBJECT, R)
+        %
+        % Method *dBm* plots the ampltitude spectrum of the OBJECT
+        % in dBm, where a R Ohm reference impedance is used.
+        function dBm(obj,R)
+            % DBM - Plot the amplitude spectrum in dBm  of SignalClass object.
+            %
+            %	dBm(OBJECT) - Plots the ampltitude spectrum of
+            %	the OBJECT in dBm, when a 50 Ohm reference impedance is
+            %	considered. 
+            %
+            %	dBm(OBJECT, R) - Plots the ampltitude spectrum of the OBJECT
+            %   in dBm, where a R Ohm reference impedance is used.
+            %
+            % See also:  SignalClass/plot, SignalClass/dB, SignalClass/phase,
+            % SignalClass/power.
+            switch nargin
+                case 1
+                    R=50;
+            end
+            l=length(obj.Samples);
+            a=abs(fftshift(fft(obj.Samples)))/l;
+            %x=((1:l)/l*obj.Fs)-(obj.Fs/2)+obj.Fc;
+            x=((1:l)/l*obj.Fs)-(obj.Fs/2);
+            plot(x,10*log10(a.^2/0.001*R));
+            xlabel(['Frequency (Fs = ' num2str(obj.Fs) ')']);
+            ylabel('Amplitude (dBm)');
+        end
+        %% phase@SignalClass
+        %
+        %  phase(OBJECT)
+        %
+        % Method *phase* plots the phase spectrum of *Samples* property.
+        function phase(obj)
+            % PHASE - Plot the amplitude spectrum of SignalClass object.
+            %
+            %   phase(OBJECT)
+            %
+            % See also:  SignalClass/plot, SignalClass/dB, SignalClass/dBm,
+            % SignalClass/power
+                    p=phase(fftshift(fft(obj.Samples)));
+                    l=length(obj.Samples);
+                    x=((1:l)/l*obj.Fs)-(obj.Fs/2)+obj.Fc;
+                    plot(x,p/l);
+                    title(obj.Name);
+                    xlabel(['Frequency (Fs = ' num2str(obj.Fs) ')']);
+                    ylabel('Phase (rad)');                    
+        end
+        %% freq@SignalClass
+        %
+        %  freq(OBJECT)
+        %
+        % Sets *Domain* property to 'Frequency'.
+        function obj=freq(obj)
+            % FREQ - Set Domain property to 'Frequency' of a SignalClass
+            % object.
+            %
+            %   freq(OBJECT)
+            %
+            % See also: SignalClass/SignalClass, SignalClass/time.
+            obj.Domain='FREQUENCY';
+        end
+        %% time@SignalClass
+        %
+        %  time(OBJECT)
+        %
+        % Sets *Domain* property to 'Time'.
+        function obj=time(obj)
+            % Time - Set Domain property to 'Time' of a SignalClass
+            % object.
+            %
+            %   time(OBJECT)
+            %
+            % See also: SignalClass/SignalClass, SignalClass/freq.
+            obj.Domain='Time';
+        end
+        %% operations
+        %
+        % Most arithmetic operations are overloaded for SignalClass
+        % objects.
+        %
+        %  o1=SignalClass(sin(1:100),1);
+        %  o2=SignalClass(cos(1:100),1);
+        %  o3=o1+o2;
+        %
+        function obj=plus(obj,obj2)
+            if isnumeric(obj)
+                obj=SignalClass(obj,obj2.Fs,obj2.Fc,obj2.SNR);
+            elseif isnumeric(obj2)
+                obj2=SignalClass(obj2,obj.Fs,obj.Fc,obj.SNR);
+            end
+            obj.Samples=obj.Samples+obj2.Samples;
+        end
+        function obj=minus(obj,obj2)
+            if isnumeric(obj)
+                obj=SignalClass(obj,obj2.Fs,obj2.Fc,obj2.SNR);
+            elseif isnumeric(obj2)
+                obj2=SignalClass(obj2,obj.Fs,obj.Fc,obj.SNR);
+            end
+            obj.Samples=obj.Samples-obj2.Samples;
+        end
+        function obj=uminus(obj)
+            obj.Samples=-obj.Samples;
+        end
+        function obj=abs(obj)
+            obj.Samples=obj.Samples.*conj(obj.Samples);
+        end
+        function obj=times(obj,obj2)
+            if isnumeric(obj)
+                obj=SignalClass(obj,obj2.Fs,obj2.Fc,obj2.SNR);
+            elseif isnumeric(obj2)
+                obj2=SignalClass(obj2,obj.Fs,obj.Fc,obj.SNR);
+            end
+            obj.Samples=obj.Samples.*obj2.Samples;
+        end
+        function obj=lt(obj,obj2)
+            if isnumeric(obj)
+                obj=SignalClass(obj,obj2.Fs,obj2.Fc,obj2.SNR);
+            elseif isnumeric(obj2)
+                obj2=SignalClass(obj2,obj.Fs,obj.Fc,obj.SNR);
+            end
+            obj.Samples=lt(obj.Samples,obj2.Samples);
+        end
+        function obj=gt(obj,obj2)
+            if isnumeric(obj)
+                obj=SignalClass(obj,obj2.Fs,obj2.Fc,obj2.SNR);
+            elseif isnumeric(obj2)
+                obj2=SignalClass(obj2,obj.Fs,obj.Fc,obj.SNR);
+            end
+            obj.Samples=gt(obj.Samples,obj2.Samples);
+        end
+        function obj=le(obj,obj2)
+            if isnumeric(obj)
+                obj=SignalClass(obj,obj2.Fs,obj2.Fc,obj2.SNR);
+            elseif isnumeric(obj2)
+                obj2=SignalClass(obj2,obj.Fs,obj.Fc,obj.SNR);
+            end
+            obj.Samples=le(obj.Samples,obj2.Samples);
+        end
+        function obj=ge(obj,obj2)
+            if isnumeric(obj)
+                obj=SignalClass(obj,obj2.Fs,obj2.Fc,obj2.SNR);
+            elseif isnumeric(obj2)
+                obj2=SignalClass(obj2,obj.Fs,obj.Fc,obj.SNR);
+            end
+            obj.Samples=ge(obj.Samples,obj2.Samples);
+        end
+        function obj=and(obj,obj2)
+            if isnumeric(obj)
+                obj=SignalClass(obj,obj2.Fs,obj2.Fc,obj2.SNR);
+            elseif isnumeric(obj2)
+                obj2=SignalClass(obj2,obj.Fs,obj.Fc,obj.SNR);
+            end
+            obj.Samples=and(obj.Samples,obj2.Samples);
+        end
+        function obj=rdivide(obj,obj2)
+            if isnumeric(obj)
+                obj=SignalClass(obj,obj2.Fs,obj2.Fc,obj2.SNR);
+            elseif isnumeric(obj2)
+                obj2=SignalClass(obj2,obj.Fs,obj.Fc,obj.SNR);
+            end
+            obj.Samples=rdivide(obj.Samples,obj2.Samples);
+        end
+        
+%         function obj=subsref(obj,val)
+%             switch val(1).type
+%                 case '()'
+%                     %return the Samples shown by the index
+%                     obj=obj.Samples(val(1).subs{1});
+%                 case '.'
+%                     switch val(1).subs
+%                         case 'plot'
+%                             obj.plot;
+%                         case 'dB'
+%                             obj.dB;
+%                         case 'dBm'
+%                             obj.dBm;
+%                         case 'phase'
+%                             obj.phase
+%                         otherwise 
+%                             try
+%                                 obj=obj.(val(1).subs);
+%                             catch
+%                                 error('Attempt to reference field of non-structure array');
+%                             end
+%                     end
+%             end
+%         end
+% 
+%         function obj=subsasgn(obj,value)
+%             obj.Samples(value)=obj.Samples;
+%         end
+%         
+%         function obj=subsindex(obj,value)
+%             obj.Samples=obj.Samples(value.subs{1});
+%         end
+        function stem(obj)
+            switch upper(obj.Domain)
+                case 'TIME'
+                    T=length(obj.Samples)/obj.Fs;
+                    x=1/obj.Fs:1/obj.Fs:T;
+                    stem(x,obj.Samples);
+                case 'FREQUENCY'
+                    a=abs(fftshift(fft(obj.Samples)));
+                    p=phase(fftshift(fft(obj.Samples)));
+                    l=length(obj.Samples);
+                    x=((1:l)/l*obj.Fs)-(obj.Fs/2)+obj.Fc;
+                    subplot(2,1,1);
+                    stem(x,db(a/l));
+                    title(obj.Name);
+                    xlabel(['Frequency (Fs = ' num2str(obj.Fs) ')']);
+                    ylabel('Amplitude (db)');
+                    subplot(2,1,2);
+                    stem(x,p/l);
+                    title(obj.Name);
+                    xlabel(['Frequency (Fs=' num2str(obj.Fs) ')']);
+                    ylabel('Phase (rad)');                    
+            end
+        end
+        function obj=transpose(obj)
+            obj.Samples=obj.Samples.';
+        end
+        function obj=ctranspose(obj)
+            obj.Samples=obj.Samples';
+        end
+    end
+end
+
+##### SOURCE END #####
+--></body></html>
