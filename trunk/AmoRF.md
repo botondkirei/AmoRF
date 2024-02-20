@@ -1,5 +1,6 @@
 ```marmaid
- Animal <|-- Duck
+classDiagram
+    Animal <|-- Duck
     Animal <|-- Fish
     Animal <|-- Zebra
     Animal : +int age
