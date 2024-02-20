@@ -1,23 +1,26 @@
 ```mermaid
 classDiagram
-    Animal <|-- Duck
-    Animal <|-- Fish
-    Animal <|-- Zebra
-    Animal : +int age
-    Animal : +String gender
+    Signal <|-- Noise
+    Signal <|-- Tone
+    Signal <|-- Band
+    Signal : +String name
     Animal: +isMammal()
     Animal: +mate()
-    class Duck{
-      +String beakColor
-      +swim()
-      +quack()
+    class Noise{
+      +String name
     }
-    class Fish{
-      -int sizeInFeet
-      -canEat()
+    class Tone{
+      +String name
+      +float frequency
+      +float amplitude
+      +float phase
+      -powerLevel(R)
     }
-    class Zebra{
-      +bool is_wild
-      +run()
+    class Band{
+      +String name
+      +float frequency
+      +float amplitude
+      +float phase
+      -powerLevel(R)
     }
 ```
