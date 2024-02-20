@@ -1,0 +1,174 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      --><title>Getting started</title><meta name="generator" content="MATLAB 7.10"><meta name="date" content="2011-11-10"><meta name="m-file" content="amorf_getting_started"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h1>Getting started</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Product Overview</a></li><li><a href="#2">Abstaction Layers</a></li><li><a href="#3">Object Oriented Implementation</a></li></ul></div><h2>Product Overview<a name="1"></a></h2><p>
+The amo<font style="color:990000">RF</font> toolbox is a versatil
+environment for behavioral modeling and system level simulation of RF
+front-ends. The toolbox was created to generate test vectors for digital
+compensation algorithms of RF front-end nonidealities. In this
+application a low level simulation is not necessary, but a quick
+evaluation of RF front-end effect on the received signal is desired.
+</p><h2>Abstaction Layers<a name="2"></a></h2><p>
+The abstraction layers are the result of RF receiver architecture
+generalization. This multilayer approach deployed in the development of
+the amo<font style="color:990000">RF</font> toolbox makes it highly
+flexible and easy to use. Three abstraction layers were established. The
+first layer ois the "attribute" layer. Attributes are considered
+desired functionalities and undesired non-idealities present in to
+RF/analog blocks. Attributes are modeled using analytical expressions.
+The components of this layer encapsulates the properties and the effects
+of attributes in well distingushed entities. The second layer is
+populated by the RF/analog blocks (amplifers, mixers, etc.).
+The elements of this layer are seen as a group of attributes bounded
+between input and output impedances. Thus reliable behavioral models are
+obtaned. The components of the third layer are the RF tuners. The elements
+of this layer are seen as a cascade of RF/analog blocks.
+Abstraction layers currently supported by the amo<font style="color:990000">RF</font>
+toolbox is illustrated below.
+</p><p><img vspace="5" hspace="5" src="abstraction_levels.png" alt=""> </p><h2>Object Oriented Implementation<a name="3"></a></h2><p>Two types of classes are used for OOP implementation: (i) layer classes to implement the abstraction layers; (ii) attributes classes encapsulating the properties and effects of the functionalities and non-idealities. Both classes are derived from <a href="BaseClass.html">BaseClass</a>. This parent class contains general purpose methods (read and write of properties).</p><p><img vspace="5" hspace="5" src="classes.png" alt=""> </p><p><b>Layer Classes.</b></p><p>The parent class of the toolbox components is <a href="BaseClass.html">BaseClass</a>. A class is defined for each abstraction layer: <a href="AttributeClass.html">AttributeClass</a> is the class especially intended to be a template of the attributes. <a href="BlockClass.html">BlockClass</a> and <a href="TunerClass.html">TunerClass</a> provide mechanism to aggregate attribute objects, respectivelly the obtained RF/analog behavioral models. The "messaging" between the layers is done using signals, that are objects derived form <a href="SignalClass.html">SignalClass</a>.</p><p><b>Attribute Classes.</b></p><p>Non-idealities may be defined by the user too, but some predefined RF block nonidealities can be found in the toolbox:</p><div><ul><li><a href="GainClass.html">Gain and nonlinearity</a></li><li><a href="NoiseClass.html">Noise</a></li><li><a href="FreqSelClass.html">Frequency Selectivity</a></li><li><a href="FreqConvClass.html">Frequency Conversion</a></li><li><a href="PhaseNoiseClass.html">Phase Noise</a></li><li><a href="IQImbalClass.html">I/Q Mismatch (Imbalance)</a></li></ul></div><p>
+Find out more about the usage of the amo<font
+style="color:990000">RF</font> toolbox visit the <a
+href="amorf_user_guide.html">amoRF User Guide</a>.
+</p><p class="footer"><br>
+      Published with MATLAB&reg; 7.10<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Getting started
+% 
+%% Product Overview
+%
+% <html>
+% The amo<font style="color:990000">RF</font> toolbox is a versatil
+% environment for behavioral modeling and system level simulation of RF
+% front-ends. The toolbox was created to generate test vectors for digital
+% compensation algorithms of RF front-end nonidealities. In this
+% application a low level simulation is not necessary, but a quick
+% evaluation of RF front-end effect on the received signal is desired.
+% </html>
+%
+%% Abstaction Layers
+%
+% <html>
+% The abstraction layers are the result of RF receiver architecture 
+% generalization. This multilayer approach deployed in the development of
+% the amo<font style="color:990000">RF</font> toolbox makes it highly
+% flexible and easy to use. Three abstraction layers were established. The
+% first layer ois the "attribute" layer. Attributes are considered
+% desired functionalities and undesired non-idealities present in to
+% RF/analog blocks. Attributes are modeled using analytical expressions.
+% The components of this layer encapsulates the properties and the effects
+% of attributes in well distingushed entities. The second layer is
+% populated by the RF/analog blocks (amplifers, mixers, etc.). 
+% The elements of this layer are seen as a group of attributes bounded
+% between input and output impedances. Thus reliable behavioral models are
+% obtaned. The components of the third layer are the RF tuners. The elements
+% of this layer are seen as a cascade of RF/analog blocks.  
+% Abstraction layers currently supported by the amo<font style="color:990000">RF</font> 
+% toolbox is illustrated below.
+% </html>
+%
+% <<abstraction_levels.png>>
+%
+%% Object Oriented Implementation
+%
+% Two types of classes are used for OOP implementation: (i) layer classes 
+% to implement the abstraction layers; (ii) attributes classes encapsulating
+% the properties and effects of the functionalities and non-idealities.
+% Both classes are derived from <BaseClass.html BaseClass>. This parent
+% class contains general purpose methods (read and write of properties).
+%
+% <<classes.png>>
+%
+% *Layer Classes.*
+%
+% The parent class of the toolbox components is <BaseClass.html BaseClass>.
+% A class is defined for each abstraction layer:
+% <AttributeClass.html AttributeClass> is the class especially intended to
+% be a template of the attributes. <BlockClass.html BlockClass> and 
+% <TunerClass.html TunerClass> provide mechanism to aggregate
+% attribute objects, respectivelly the obtained RF/analog behavioral models.
+% The "messaging" between the layers is done using signals,
+% that are objects derived form <SignalClass.html SignalClass>.
+%
+% *Attribute Classes.* 
+%
+% Non-idealities may be defined by the user too, but some predefined RF block
+% nonidealities can be found in the toolbox: 
+%
+% * <GainClass.html Gain and nonlinearity>
+% * <NoiseClass.html Noise>
+% * <FreqSelClass.html Frequency Selectivity>
+% * <FreqConvClass.html Frequency Conversion>
+% * <PhaseNoiseClass.html Phase Noise>
+% * <IQImbalClass.html I/Q Mismatch (Imbalance)>
+%
+% <html>
+% Find out more about the usage of the amo<font
+% style="color:990000">RF</font> toolbox visit the <a
+% href="amorf_user_guide.html">amoRF User Guide</a>.
+% </html>
+
+
+
+##### SOURCE END #####
+--></body></html>

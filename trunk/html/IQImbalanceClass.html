@@ -1,0 +1,136 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      --><title>IQImbalanceClass</title><meta name="generator" content="MATLAB 7.10"><meta name="date" content="2011-04-07"><meta name="m-file" content="IQImbalanceClass"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><p class="footer"><br>
+      Published with MATLAB&reg; 7.10<br></p></div><!--
+##### SOURCE BEGIN #####
+classdef IQImbalanceClass < BaseClass
+%
+% IQImbalanceClass I/Q imbalance (or mismatch) in radio receivers
+%
+%   IMB = IQImbalanceClass() instantialize an object of this class
+%
+%   Properties:
+%       g - amplitude error (an absolute value); the value of g can be
+%           either a scalar or a vector matrix; frequency independent amplitude 
+%           error is considered if the value of g is scalar 
+%       phi - phase error (degrees); the value of phi can be either
+%           a scalar or a vector matrix; frequency independent phase error
+%           is considered if the value of phi is scalar
+%       k1, k2 - imbalance parameters ar automatically computed whenever
+%           the amplitude of phase error is modified
+%       IRR - image rejection ratio, automatically updated whenever the
+%           amplitide or phase error is modified
+%
+%   Methods:
+%       OUTPUT = IMB.process(INPUT) - introduces the I/Q imbalance in the
+%           signal INPUT and returns OUTPUT; the signal INPUT is recommened to
+%           be an object derived from SignalClass
+    properties
+        % alegerea corecta a parametrilor :
+        % a) ne independenta de frecventa 
+        g %eroarea de amplitudine
+        phi %eroarea de faza
+        k1 %parametru de neimperechere
+        k2 %parametru de neimperechere
+        IRR %rata rejectiei imaginii
+    end
+    methods
+        %membru invitat la executie la accesarea pentru scrierea campului g
+        function obj=set.g(obj,value)
+            obj.g=value;%scrierea valorii
+            obj=update(obj);%calcul parametrilor de neimperechere
+        end
+        %campul invitat la executie la accesarea pentru scrierea campului phi
+        function obj=set.phi(obj,value)
+            obj.phi=value*pi/180;%salvarea valorii
+            obj=update(obj);%calcul parametrilor de neimperechere
+        end
+        %campul pentru executia neidealitatii
+        function output=process(varargin)
+            obj=varargin{1};
+            signal=varargin{2};
+            output=SignalClass(signal.Samples,signal.Fs);
+            switch length(obj.k1)
+                case 1
+                    v=obj.k1*signal.Samples  + obj.k2*conj(signal.Samples);
+                    output.Samples=v;
+                otherwise
+                    v= filter(obj.k1,signal.Samples)  + ...
+                        filter(obj.k2,conj(signal.Samples));
+                    output.Samples=v;
+            end     
+        end
+    end
+    methods (Access=private)
+        %calcul parametrilor de neimperechere si a ratei de rejectie
+        function obj=update(obj)
+            obj.k1=(1+obj.g*exp(-1i*obj.phi))/2;
+            obj.k2=(1-obj.g*exp(1i*obj.phi))/2;
+            obj.IRR=db(abs(obj.k2./obj.k1));
+        end
+    end
+end
+##### SOURCE END #####
+--></body></html>

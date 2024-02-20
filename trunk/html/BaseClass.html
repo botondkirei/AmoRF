@@ -1,0 +1,166 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      --><title>BaseClass</title><meta name="generator" content="MATLAB 7.10"><meta name="date" content="2011-11-10"><meta name="m-file" content="BaseClass"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">BaseClass</a></li><li><a href="#3">Properties</a></li><li><a href="#4">Methods</a></li><li><a href="#6">Name</a></li><li><a href="#8">write@BaseClass</a></li><li><a href="#9">read@BaseClass</a></li><li><a href="#10">getstructure@BaseClass</a></li></ul></div><h2>BaseClass<a name="2"></a></h2><p>Encapsulates the common methods of the amoRF toolbox. The methods are reserved for later use by the graphical user interface.</p><h2>Properties<a name="3"></a></h2><div><ul><li><a href="BaseClass.html#4">Name</a> - public</li></ul></div><h2>Methods<a name="4"></a></h2><div><ul><li><a href="BaseClass.html#5">write</a></li><li><a href="BaseClass.html#6">read</a></li><li><a href="BaseClass.html#7">getstructure</a></li></ul></div><p>See also: <a href="SignalClass.html">SignalClass</a>, <a href="AttributeClass.html">AttributeClass</a>, <a href="BlockClass.html">BlockClass</a>, <a href="TunerClass.html">TunerClass</a>.</p><h2>Name<a name="6"></a></h2><p>Name of the the object. Default values is empty string.</p><h2>write@BaseClass<a name="8"></a></h2><pre>[OBJECT] = write(OBJECT,'PROPERTY',VALUE)</pre><p>The method saves <tt>VALUE</tt> (numeric) to <tt>PROPERTY</tt> (string) field of the OBJECT. The updated object is returned in OBJ.</p><h2>read@BaseClass<a name="9"></a></h2><pre>[VALUE] = write(OBJECT,'PROPERTY')</pre><p>The method returns the <tt>VALUE</tt> of OBJECTS's <tt>PROPERTY</tt>.</p><h2>getstructure@BaseClass<a name="10"></a></h2><pre>ROOT = getstructure(OBJECT)</pre><p>The method returns the object properties in a <a href="matlab:doc('uitree')">uitree</a> structure.</p><p class="footer"><br>
+      Published with MATLAB&reg; 7.10<br></p></div><!--
+##### SOURCE BEGIN #####
+% BaseClass Superclass of all the classes in amoRF toolbox.
+%
+%    Encapsulates the common methods of the amoRF toobox. The
+%    methods are reserved for later use by the graphical user interface.
+% 
+% BaseClass properties:
+%   Name - Object name
+%
+% BaseClass methods:
+%   read - Read object properties
+%   write - Write object properties
+%   getstructure - get object property field structure
+%
+% See also: SignalClass, AttributeClass, BlockClass, TunerClass.
+classdef BaseClass <  handle
+%% BaseClass
+%
+% Encapsulates the common methods of
+% the amoRF toolbox. The methods are reserved for later use by the
+% graphical user interface. 
+%
+%% Properties
+%
+% * <BaseClass.html#4 Name> - public
+%
+%% Methods
+%
+% * <BaseClass.html#5 write>
+% * <BaseClass.html#6 read>
+% * <BaseClass.html#7 getstructure>
+%
+% See also: <SignalClass.html SignalClass>, <AttributeClass.html
+% AttributeClass>, <BlockClass.html BlockClass>, <TunerClass.html TunerClass>.
+    properties 
+        %Name of the the object. Default values is empty string.
+        Name=''
+        %% Name
+        %
+        % Name of the the object. Default values is empty string.  
+    end
+    methods
+        %% write@BaseClass
+        %
+        %  [OBJECT] = write(OBJECT,'PROPERTY',VALUE)
+        %
+        % The method saves |VALUE| (numeric) to |PROPERTY| (string) field of the OBJECT. 
+        % The updated object is returned in OBJ.
+        function write(obj,property,value)
+        % Write values to the object's properties.
+        %
+        %   [OBJ] = write(OBJECT,'PROPERTY',VALUE) The 'PROPERTY' field of 
+        %   the OBJECT will be updated with VALUE, and the updated object is returned in OBJ.
+        % 
+        % See also: BaseClass/read, BaseClass/getstructure.
+                obj.(property)=value;
+        end
+        %% read@BaseClass
+        %
+        %  [VALUE] = write(OBJECT,'PROPERTY')
+        %
+        % The method returns the |VALUE| of OBJECTS's |PROPERTY|.
+        function value=read(obj,property)
+            % Read the value of the object properties. 
+            %
+            %    VALUE=read(OBJECT,'PROPERTY') The BaseClass/read member
+            %    returns into the value of the OBJECT's 'PROPERTY' field.
+            %
+            % See also: BaseClass/write, BaseClass/getstructure.
+            value=obj.(property);
+        end
+        %% getstructure@BaseClass
+        %
+        %  ROOT = getstructure(OBJECT)
+        %
+        % The method returns the object properties in a
+        % <matlab:doc('uitree') uitree> structure.
+        function root=getstructure(obj)
+            % Return the property names in a tree view structure
+            %
+            %    ROOT = getstructure(OBJECT) The method returns the
+            %    OBJECT's properties in a uitree structure
+            %
+            % See also: BaseClass/write, BaseClass/read.
+            root=uitreenode('v0','root',obj.Name,[],false);
+            branches = fieldnames(obj);
+            [a,b] = size(branches);
+            for i=1:a
+                branchname=char(branches(i));
+                s.name=[branchname, '10'];
+                s.val=10;
+                branch=uitreenode('v0','branch',s,[],true);
+                root.add(branch);
+            end
+        end
+        
+    end
+end
+##### SOURCE END #####
+--></body></html>

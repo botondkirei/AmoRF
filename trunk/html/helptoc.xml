@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<toc version="2.0">
+<!-- First tocitem specifies top level in Help browser Contents pane -->
+<!-- This can be a roadmap page, as shown below, or a content page -->
+    <tocitem target="amorf_product_page.html">amoRF Toolbox
+        <!-- Nest tocitems to create hierarchical entries in  Contents-->
+        <!-- To include icons, use the following syntax for tocitems: -->
+        <!-- <tocitem target="foo.html" image="HelpIcon.NAME"> -->
+        <!-- Title-of-Section </tocitem> -->
+        <!-- where NAME is one of the following (use capital letters): -->
+        <!-- FUNCTION, USER_GUIDE, EXAMPLES, BLOCK, GETTING_STARTED, -->
+        <!-- DEMOS, RELEASE_NOTES --> 
+        <!-- Icon images used for these entries are also stored in -->
+        <!-- matlabroot/toolbox/matlab/icons -->
+        <!-- A Getting Started Guide usually comes first -->
+        <tocitem target="amorf_getting_started.html#" image="HelpIcon.GETTING_STARTED">
+            Getting Started with amoRF
+            <tocitem target="amorf_getting_started.html#1">Product Overview
+            </tocitem>
+            <tocitem target="amorf_getting_started.html#2">Abstraction Levels
+            </tocitem>
+            <tocitem target="amorf_getting_started.html#3">Object Oriented Implementation
+            </tocitem>
+        </tocitem>
+        <!-- User Guide comes next -->
+        <tocitem target="amorf_product_page.html" 
+            image="HelpIcon.USER_GUIDE"> User Guide
+            <tocitem target="amorf_user_guide.html#1"> Built-in and User Defined Attributes
+            </tocitem>
+            <tocitem target="amorf_user_guide.html#2"> Instantiating an RF/analog Object
+            </tocitem>
+			<tocitem target="amorf_user_guide.html#3"> Instantiating an RF Tuner Object
+            </tocitem>
+        </tocitem>
+        <!-- Function reference next -->
+        <!-- First item is page describing function categories, if any -->
+        <tocitem target="amorf_classes.html#1" 
+                 image="HelpIcon.FUNCTION">Function Reference
+            <!-- First category, with link to anchor in above page -->
+            <tocitem target="amorf_classes.html#1">Layer Classes
+                <!-- Inside category, list its functions alphabetically -->
+                <tocitem target="BaseClass.html">BaseClass</tocitem>
+                <tocitem target="SignalClass.html">SignalClass</tocitem>
+                <tocitem target="AttributeClass.html">AttributeClass</tocitem>
+                <tocitem target="BlockClass.html">BlockClass</tocitem>
+                <tocitem target="TunerClass.html">TunerClass</tocitem>
+                <!-- ... -->
+            </tocitem>
+            <!-- Second category, with link to anchor in above page -->
+            <tocitem target="amorf_classes.html#2">Non-ideality Classes
+                <!-- Inside category, list its functions alphabetically -->
+                <tocitem target="GainClass.html">GainClass</tocitem>
+                <tocitem target="FreqSelectClass.html">FreqSelClass</tocitem>
+                <tocitem target="FreqConvClass.html">FreqConvClass</tocitem>				
+                <tocitem target="NoiseClass.html">NoiseClass</tocitem>
+                <tocitem target="PhaseNoiseClass.html">PhaseNoiseClass</tocitem>
+                <tocitem target="CFOClass.html">CFOClass</tocitem>
+                <tocitem target="IQImbalClass.html">IQImbalClass</tocitem>
+				<!-- ... -->
+             </tocitem>
+        </tocitem>
+        <!-- Optional List of Examples, with hyperlinks to examples in other files -->
+        <tocitem target="amorf_example.html" 
+                 image="HelpIcon.EXAMPLES">Examples
+        </tocitem>
+        <!-- Optional link or links to your or other Web sites -->
+        <tocitem target="http://www.bel.utcluj.ro/rom/Pagini_Personale/Botond_Kirei/amorf/amorf_product_page.html" 
+                 image="$toolbox/matlab/icons/webicon.gif">
+        The amoRF homepage
+        </tocitem>
+    </tocitem>
+</toc>

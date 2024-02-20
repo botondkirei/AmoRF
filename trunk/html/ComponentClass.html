@@ -1,0 +1,247 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      --><title>ComponentClass</title><meta name="generator" content="MATLAB 7.10"><meta name="date" content="2011-04-07"><meta name="m-file" content="ComponentClass"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h1>ComponentClass</h1><!--introduction--><p>ComponentClass is the generic class for RF components. It is derived form <a href="BaseClass.html">BaseClass</a> and inherits all common methods from it.</p><!--/introduction--><h2>Properties<a name="1"></a></h2><div><ul><li><a href="#3">Architecture</a></li><li><a href="#4">Signal</a></li><li><a href="#5">Zin</a></li><li><a href="#6">Zout</a></li></ul></div><h2>Methods<a name="2"></a></h2><div><ul><li><a href="#7">constructor</a></li><li><a href="#8">add</a></li><li><a href="#9">process</a></li></ul></div><h2>Architecture<a name="3"></a></h2><p><b>Architecture</b> property contains instances of nonideality classes. To add nonideality to a RF component use <b>add</b> method.</p><h2>Signal<a name="4"></a></h2><p><b>Signal</b> property will store the signal at the output of the RF component.</p><h2>Zin<a name="5"></a></h2><p>Input impedance of the RF component. Default value 50 Ohm.</p><h2>Zout<a name="6"></a></h2><p>Output impedance of the RF component. Default value 50 Ohm.</p><h2>constructor<a name="8"></a></h2><pre>obj=ComponentClass;</pre><p><b>ComponentClass</b> initialize the <b>Signal</b> property to SignalClass(0,0).</p><h2>add<a name="9"></a></h2><pre>obj.add('componentname',component);</pre><p>Methods <b>add</b> is used to contruct an RF component. An RF component consists of several nonidealities. <tt>component</tt> can be either an instance of a nonideality class or ComponentClass (or any user defined class that complies with &lt; #9 process&gt; member)</p><h2>process<a name="10"></a></h2><pre>outp=obj.process(inp)</pre><p><b>process</b> method evaluates the <b>Architecture</b> property and evaluates all the nonidealities added to the RF component (in the same order the nonidealities were added). <tt>outp</tt> and <tt>inp</tt> are instances of SignalClass</p><h2>getNF<a name="12"></a></h2><h2>gain<a name="15"></a></h2><h2>gain<a name="18"></a></h2><h2>getstructure<a name="20"></a></h2><pre>root=obj.getstructure;</pre><p>Member <b>getstructure</b> is overwritten in this class to achieve</p><p class="footer"><br>
+      Published with MATLAB&reg; 7.10<br></p></div><!--
+##### SOURCE BEGIN #####
+%% ComponentClass
+% ComponentClass is the generic class for RF components. It is derived form
+% <BaseClass.html BaseClass> and inherits all common methods from it.
+
+%% Properties
+% * <#3 Architecture>
+% * <#4 Signal>
+% * <#5 Zin>
+% * <#6 Zout>
+%% Methods
+% * <#7 constructor>
+% * <#8 add>
+% * <#9 process>
+classdef ComponentClass < BaseClass
+    properties
+        %% Architecture
+        % *Architecture* property contains instances of nonideality classes.
+        % To add nonideality to a RF component use *add* method.
+        Architecture
+        %% Signal
+        % *Signal* property will store the signal at the output of the RF component. 
+        Signal
+        %% Zin
+        % Input impedance of the RF component. Default value 50 Ohm.
+        Zin=50
+        %% Zout
+        % Output impedance of the RF component. Default value 50 Ohm.
+        Zout=50
+    end
+    methods
+        %% constructor
+        %
+        %  obj=ComponentClass;
+        %
+        % *ComponentClass* initialize the *Signal* property to
+        % SignalClass(0,0).
+        function obj=ComponentClass()
+            obj.Signal=SignalClass(0,0);
+        end
+        %% add
+        %
+        %  obj.add('componentname',component);
+        %
+        % Methods *add* is used to contruct an RF component. An RF
+        % component consists of several nonidealities. |component| can be
+        % either an instance of a nonideality class or ComponentClass (or
+        % any user defined class that complies with < #9 process> member)
+        function obj=add(obj,componentname,component)
+            obj.Architecture.(componentname)=component;
+        end
+        %% process
+        %
+        %  outp=obj.process(inp)
+        %
+        % *process* method evaluates the *Architecture* property and
+        % evaluates all the nonidealities added to the RF component (in the
+        % same order the nonidealities were added). |outp| and |inp| are
+        % instances of SignalClass
+        function    obj=process(obj,inp)
+            components = fieldnames(obj.Architecture);
+            [a,b] = size(components);
+            arch=obj.Architecture;
+            componentname=char(components(1));
+            b=getfield(arch,componentname);
+            outp=b.process(inp);
+            for i=2:a
+                b=getfield(arch,char(components(i)));
+                outp=b.process(outp);
+            end
+            obj.Signal=outp;
+        end
+        function value=NF(obj)
+        %GETNF returns the Noise Figure of the component.
+        %
+        %NF=obj.getNF
+        
+        %% getNF
+        %
+        components = fieldnames(obj.Architecture);
+        [a,b] = size(components);
+        arch=obj.Architecture;
+            for i=1:a
+                b=getfield(arch,char(components(i)));
+                try
+                    value=b.NF;
+                catch me
+                end
+            end
+        end
+        function value=gain(obj)
+        %GAIN returns the voltage gain without load.
+        %
+        %gain=obj.gain;
+        
+        %% gain
+        %
+        components = fieldnames(obj.Architecture);
+        [a,b] = size(components);
+        arch=obj.Architecture;
+            for i=1:a
+                b=getfield(arch,char(components(i)));
+                try
+                    value=b.a1;
+                catch me
+                end
+            end
+        end
+        function value=temp(obj)
+        %GAIN returns the voltage gain without load.
+        %
+        %gain=obj.gain;
+        
+        %% gain
+        %
+        components = fieldnames(obj.Architecture);
+        [a,b] = size(components);
+        arch=obj.Architecture;
+            for i=1:a
+                b=getfield(arch,char(components(i)));
+                try
+                    value=b.Temp;
+                catch me
+                end
+            end
+        end
+        %% getstructure
+        %
+        %  root=obj.getstructure;
+        %
+        % Member *getstructure* is overwritten in this class to achieve  
+        function root=getstructure(obj)
+            root=uitreenode('v0','root','Architecture',[],false);
+            arch=obj.Architecture;
+            branches = fieldnames(arch);
+            [a,b] = size(branches);
+            for i=1:a
+                branchname=char(branches(i));
+                branch=uitreenode('v0','branch',branchname,[],false);
+                component=arch.(branchname);
+                leafs=fieldnames(component);
+                [c,d]=size(leafs);
+                for i=1:c
+                    if strcmp(char(leafs(i)),'Architecture')
+                        leaf=obj.Architecture.(branchname).getstructure;
+                    else
+                        leaf=uitreenode('v0','branch',char(leafs(i)),[],true);
+                    end
+                    branch.add(leaf);
+                end
+                root.add(branch);
+            end
+        end
+    end
+end
+% An RF component exhibits several non-idealities, but special attention
+% should be accorded to the thermal noise and the nonlinearity. Using these
+% two nonidealities the noise figure and the gain of the RF blocks are
+% modelled. 
+%
+% The procedure of creating a RF component model comprises in a
+% few steps. First the objects of nonidealities are instatiated, then an
+% object of <../amorf/generic/html/CompomentClass.html ComponentClass> is
+% created. Next use the add member of the
+% <../amorf/generic/html/CompomentClass.html ComponentClass> object in
+% order to include the non-ideality objects into the component
+% model. The noise figure of the RF component is modelled using the thermal
+% noise object, so the noise figure property of the later object should be
+% written. The gain of the RF component is modeled by the nonlinearity
+% object. The idea is to set the linearity as high as possible in order to
+% not effect the processed signal.
+
+gain=NonLinearityClass; % create a non-linearity object
+gain.a1=10; % set the component gain
+gain.a3=0.001; % set the third order gain near to 0
+amplif = ComponentClass; % instatiate an object of ComponentClass
+amplif.add('Thermal', thermal); % add the thermal noise object
+amplif.add('Gain',gain); % add the nonlinearity object
+signal=amplif.process(signal); % process a signal
+##### SOURCE END #####
+--></body></html>
