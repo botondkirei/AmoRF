@@ -6,9 +6,18 @@ classDiagram
     Noise <|-- ThermalNoise
     Noise <|-- QunatizationNoise
     class Signal {
-        String name
-        dB()
-        dBm(R)
+        Private:
+            String name
+            float[] freqBase
+            float[] ampl
+            float[] phase
+        Methods:
+            constructor(bandWidth, freqRes)
+            constructor(bandwidth, nrOfPoint)
+            add(signal, signal)
+            gain(signal)
+            dB()
+            dBm(R)
     }
     class Noise{
 
