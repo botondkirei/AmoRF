@@ -6,22 +6,19 @@ classDiagram
     Noise <|-- ThermalNoise
     Noise <|-- QunatizationNoise
     class Signal {
-        Constants/Defaults:
-            defBandWidth 10e9
-            defFreqRes 1e9
-        Private:
-            String name
-            float[] freqBase
-            float[] ampl
-            float[] phase
-        Methods:
-            constructor(default)
-            constructor(bandWidth, freqRes)
-            constructor(bandWidth, nrOfPoint)
-            add(signal, signal)
-            gain(signal)
-            dB()
-            dBm(R)
+            +defBandWidth 10e9
+            +defFreqRes 1e3
+            #String name
+            #vector[float] freqBase
+            #vector[float] ampl
+            #vector[float] phase
+            +constructor()
+            +constructor(bandWidth, freqRes)
+            +constructor(bandWidth, nrOfPoint)
+            +add(signal, signal)
+            +gain(signal)
+            +dB()
+            +dBm(R)
     }
     class Noise{
 
