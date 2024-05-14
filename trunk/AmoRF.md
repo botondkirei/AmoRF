@@ -1,8 +1,8 @@
 ```mermaid
 classDiagram
     Signal <|-- Tone
-    Signal <|-- BandLimited
-    BandLimited <|-- Noise
+    Signal <|-- Noise
+    Noise <|-- BandLimited
     Noise <|-- ThermalNoise
     Noise <|-- QunatizationNoise
     class Signal {
@@ -28,7 +28,7 @@ classDiagram
       +float phase
       -powerLevel(R)
     }
-    class Band{
+    class BandLimited{
       +float frequency
       +float amplitude
       +float phase
