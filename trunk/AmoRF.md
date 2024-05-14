@@ -3,24 +3,31 @@ classDiagram
     Signal <|-- Noise
     Signal <|-- Tone
     Signal <|-- Band
-    Signal : +String name
+    Signal: +String name
     Signal: +dB()
     Signal: +dBm(R)
     class Noise{
-      +String name
+      Signal <|-- ThermalNoise
+      Signal <|-- QunatizationNoise
     }
     class Tone{
-      +String name
       +float frequency
       +float amplitude
       +float phase
       -powerLevel(R)
     }
     class Band{
-      +String name
       +float frequency
       +float amplitude
       +float phase
       -powerLevel(R)
     }
+    class ThermalNoise {
+    +Property: Temperature
+    +Property: Impedance
+    }
+    class QunatizationNoise {
+    +Property: FullScale
+    +Property: NrOfBits
+    }     
 ```
